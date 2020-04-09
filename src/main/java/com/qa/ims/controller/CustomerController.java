@@ -5,20 +5,20 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.qa.ims.persistence.domain.Customer;
-import com.qa.ims.services.CrudServices;
+import com.qa.ims.services.CrudableServices;
 import com.qa.ims.utils.Utils;
 
 /**
  * Takes in customer details for CRUD functionality
  *
  */
-public class CustomerController implements Crudable<Customer>{
+public class CustomerController implements CrudableController<Customer>{
 
 	public static final Logger LOGGER = Logger.getLogger(CustomerController.class);
 	
-	private CrudServices<Customer> customerService;
+	private CrudableServices<Customer> customerService;
 	
-	public CustomerController(CrudServices<Customer> customerService) {
+	public CustomerController(CrudableServices<Customer> customerService) {
 		this.customerService = customerService;
 	}
 	

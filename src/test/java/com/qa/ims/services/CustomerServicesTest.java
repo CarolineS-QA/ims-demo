@@ -8,14 +8,14 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.qa.ims.persistence.dao.Dao;
+import com.qa.ims.persistence.dao.CrudableDao;
 import com.qa.ims.persistence.domain.Customer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomerServicesTest {
 	
 	@Mock
-	private Dao<Customer> customerDao;
+	private CrudableDao<Customer> customerDao;
 	
 	@InjectMocks
 	private CustomerServices customerServices;

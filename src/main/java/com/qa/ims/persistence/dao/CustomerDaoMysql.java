@@ -12,24 +12,29 @@ import org.apache.log4j.Logger;
 
 import com.qa.ims.persistence.domain.Customer;
 
-public class CustomerDaoMysql implements Dao<Customer> {
+public class CustomerDaoMysql implements CrudableDao<Customer> {
 
 	public static final Logger LOGGER = Logger.getLogger(CustomerDaoMysql.class);
 
 	private String jdbcConnectionUrl;
 	private String username;
 	private String password;
+	private String ip;
 
-	public CustomerDaoMysql(String username, String password) {
-		this.jdbcConnectionUrl = "jdbc:mysql://35.242.180.3/ims";
+	public CustomerDaoMysql(String username, String password, String ip) {
+		this.ip = ip;
+		this.jdbcConnectionUrl = "jdbc:mysql://" + ip + "/ims";
 		this.username = username;
 		this.password = password;
+
 	}
 
-	public CustomerDaoMysql(String jdbcConnectionUrl, String username, String password) {
+	public CustomerDaoMysql(String jdbcConnectionUrl, String username, String password, String ip) {
+		this.ip = ip;
 		this.jdbcConnectionUrl = jdbcConnectionUrl;
 		this.username = username;
 		this.password = password;
+
 	}
 
 	Customer customerFromResultSet(ResultSet resultSet) throws SQLException {

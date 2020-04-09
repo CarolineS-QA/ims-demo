@@ -2,7 +2,7 @@ package com.qa.ims.persistence.dao;
 
 import java.util.List;
 
-public interface Dao<T> {
+public interface CrudableDao<T> {
 
     List<T> readAll();
      

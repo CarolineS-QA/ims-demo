@@ -11,7 +11,7 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 
 import com.qa.ims.controller.Action;
-import com.qa.ims.controller.Crudable;
+import com.qa.ims.controller.CrudableController;
 import com.qa.ims.controller.CustomerController;
 import com.qa.ims.persistence.dao.CustomerDaoMysql;
 import com.qa.ims.persistence.domain.Domain;
@@ -23,18 +23,22 @@ public class Ims {
 	public static final Logger LOGGER = Logger.getLogger(Ims.class);
 
 	public void imsSystem() {
+
+		LOGGER.info("What is your instance IP? " + "\n! If you have mySQL on your machine you can use localhost:3306"
+				+ "\nThe GCP instance for this project is 35.242.180.3");
+		String ip = Utils.getInput();
 		LOGGER.info("What is your username");
 		String username = Utils.getInput();
 		LOGGER.info("What is your password");
 		String password = Utils.getInput();
 
-		init(username, password);
+		init(username, password, ip);
 
 		LOGGER.info("Which entity would you like to use?");
 		Domain.printDomains();
 
 		Domain domain = Domain.getDomain();
-		LOGGER.info("What would you like to do with " + domain.name().toLowerCase() + ":");
+		LOGGER.info("What would you like to do with the " + domain.name().toLowerCase() + " table:");
 
 		Action.printActions();
 		Action action = Action.getAction();
@@ -42,7 +46,7 @@ public class Ims {
 		switch (domain) {
 		case CUSTOMER:
 			CustomerController customerController = new CustomerController(
-					new CustomerServices(new CustomerDaoMysql(username, password)));
+					new CustomerServices(new CustomerDaoMysql(username, password, ip)));
 			doAction(customerController, action);
 			break;
 		case ITEM:
@@ -57,7 +61,7 @@ public class Ims {
 
 	}
 
-	public void doAction(Crudable<?> crudController, Action action) {
+	public void doAction(CrudableController<?> crudController, Action action) {
 		switch (action) {
 		case CREATE:
 			crudController.create();
@@ -79,14 +83,15 @@ public class Ims {
 	}
 
 	/**
-	 * To initialise the database schema. DatabaseConnectionUrl will default to
-	 * localhost.
+	 * To initialise the database schema. DatabaseConnectionUrl is my GCP instance
+	 * IP
+	 * 
 	 * 
 	 * @param username
 	 * @param password
 	 */
-	public void init(String username, String password) {
-		init("jdbc:mysql://35.242.180.3/", username, password, "src/main/resources/sql-schema.sql");
+	public void init(String username, String password, String ip) {
+		init("jdbc:mysql://" + ip + "/", username, password, "src/main/resources/sql-schema.sql");
 	}
 
 	public String readFile(String fileLocation) {
