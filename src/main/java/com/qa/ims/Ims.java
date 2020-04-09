@@ -11,7 +11,7 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 
 import com.qa.ims.controller.Action;
-import com.qa.ims.controller.CrudController;
+import com.qa.ims.controller.Crudable;
 import com.qa.ims.controller.CustomerController;
 import com.qa.ims.persistence.dao.CustomerDaoMysql;
 import com.qa.ims.persistence.domain.Domain;
@@ -57,7 +57,7 @@ public class Ims {
 
 	}
 
-	public void doAction(CrudController<?> crudController, Action action) {
+	public void doAction(Crudable<?> crudController, Action action) {
 		switch (action) {
 		case CREATE:
 			crudController.create();
@@ -86,7 +86,7 @@ public class Ims {
 	 * @param password
 	 */
 	public void init(String username, String password) {
-		init("jdbc:mysql://localhost:3306/", username, password, "src/main/resources/sql-schema.sql");
+		init("jdbc:mysql://35.242.180.3/", username, password, "src/main/resources/sql-schema.sql");
 	}
 
 	public String readFile(String fileLocation) {

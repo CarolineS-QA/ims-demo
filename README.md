@@ -1,7 +1,15 @@
-Coverage: 34%
-# Project Title
 
-One Paragraph of project description goes here
+# Inventory Management System (IMS)
+
+My first Individual Project involving Java source code and an SQL database hosted on Google Cloud Platform.
+
+MVP: A built application runnable via the command line interface.
+
+Test Coverage: 0%
+
+Trello board for project: https://trello.com/b/OemgxWxd/qa-project-ims-kanban
+
+Presentation about the project: https://docs.google.com/presentation/d/1YDEU1-LP33aZws2V7fW8h5KjA1Orr4djnfgzTaIa310/edit?usp=sharing
 
 ## Getting Started
 
@@ -74,7 +82,8 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## Authors
 
-* **Chris Perrins** - *Initial work* - [christophperrins](https://github.com/christophperrins)
+* **Caroline Strasenburgh**
+* **Chris Perrins** - *Readme layout*
 
 ## License
 
@@ -84,6 +93,6 @@ This project is licensed under the MIT license - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Jordan Harrison [JHarry444] (https://github.com/JHarry444/MarchJDBC)
+* Chris Perrins [christophperrins] (https://github.com/christophperrins/ims-demo)
+* 

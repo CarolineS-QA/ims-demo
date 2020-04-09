@@ -12,7 +12,7 @@ import com.qa.ims.utils.Utils;
  * Takes in customer details for CRUD functionality
  *
  */
-public class CustomerController implements CrudController<Customer>{
+public class CustomerController implements Crudable<Customer>{
 
 	public static final Logger LOGGER = Logger.getLogger(CustomerController.class);
 	
