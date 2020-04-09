@@ -83,7 +83,7 @@ We use [SemVer](http://semver.org/) for versioning.
 ## Authors
 
 * **Caroline Strasenburgh**
-* **Chris Perrins** - *Readme layout*
+* **Chris Perrins** - *initial work*
 
 ## License
 
