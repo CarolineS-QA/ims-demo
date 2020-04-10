@@ -23,8 +23,8 @@ public class Ims {
 	public static final Logger LOGGER = Logger.getLogger(Ims.class);
 
 	public void imsSystem() {
-
-		LOGGER.info("What is your instance IP? " + "\n! If you have mySQL on your machine you can use localhost:3306"
+		LOGGER.info("Hello! Welcome to your Inventory Management System..." + "\nWhat is your instance IP? "
+				+ "\n! If you have mySQL on your machine you can use localhost:3306"
 				+ "\nThe GCP instance for this project is 35.242.180.3");
 		String ip = Utils.getInput();
 		LOGGER.info("What is your username");
@@ -32,6 +32,7 @@ public class Ims {
 		LOGGER.info("What is your password");
 		String password = Utils.getInput();
 
+//		while (Utils.getInput() == "quit") {
 		init(username, password, ip);
 
 		LOGGER.info("Which entity would you like to use?");
@@ -51,14 +52,18 @@ public class Ims {
 			break;
 		case ITEM:
 			break;
-		case ORDER:
+		case ITEM_ORDERS:
+			break;
+		case ORDERS:
 			break;
 		case STOP:
+			LOGGER.info("Good-bye!");
+//			boolean quit = false;
 			break;
 		default:
 			break;
 		}
-
+//		}
 	}
 
 	public void doAction(CrudableController<?> crudController, Action action) {
