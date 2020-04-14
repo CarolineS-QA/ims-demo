@@ -42,7 +42,7 @@ public class Customer {
 	}
 
 	public String toString() {
-		return "id: " + id + "\tfirst name: " + firstName + "\tsurname: " + surname;
+		return "id: " + id + " |\tfirst name: " + firstName + " |\tsurname: " + surname;
 	}
 
 	@Override
