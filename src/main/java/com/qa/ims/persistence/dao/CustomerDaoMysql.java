@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.qa.ims.persistence.domain.Customer;
 
+// expand for all imports
 public class CustomerDaoMysql implements CrudableDao<Customer> {
 
 	public static final Logger LOGGER = Logger.getLogger(CustomerDaoMysql.class);
@@ -19,6 +20,7 @@ public class CustomerDaoMysql implements CrudableDao<Customer> {
 	private String jdbcConnectionUrl;
 	private String username;
 	private String password;
+	@SuppressWarnings("unused")
 	private String ip;
 
 	public CustomerDaoMysql(String username, String password, String ip) {
@@ -53,7 +55,7 @@ public class CustomerDaoMysql implements CrudableDao<Customer> {
 	public List<Customer> readAll() {
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("select * from customers");) {
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM customers");) {
 			ArrayList<Customer> customers = new ArrayList<>();
 			while (resultSet.next()) {
 				customers.add(customerFromResultSet(resultSet));
