@@ -13,9 +13,12 @@ import org.apache.log4j.Logger;
 import com.qa.ims.controller.Action;
 import com.qa.ims.controller.CrudableController;
 import com.qa.ims.controller.CustomerController;
+import com.qa.ims.controller.ItemController;
 import com.qa.ims.persistence.dao.CustomerDaoMysql;
+import com.qa.ims.persistence.dao.ItemDaoMysql;
 import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.services.CustomerServices;
+import com.qa.ims.services.ItemServices;
 import com.qa.ims.utils.Utils;
 
 public class Ims {
@@ -32,38 +35,44 @@ public class Ims {
 		LOGGER.info("What is your password");
 		String password = Utils.getInput();
 
-//		while (Utils.getInput() == "quit") {
 		init(username, password, ip);
+		boolean stop = false;
+		while (stop == false) {
+			LOGGER.info("Which entity would you like to use?");
+			Domain.printDomains();
 
-		LOGGER.info("Which entity would you like to use?");
-		Domain.printDomains();
+			Domain domain = Domain.getDomain();
+			if (domain == Domain.STOP) {
+				break;
+			}
+			LOGGER.info("What would you like to do with the " + domain.name().toLowerCase() + " table: ");
 
-		Domain domain = Domain.getDomain();
-		LOGGER.info("What would you like to do with the " + domain.name().toLowerCase() + " table:");
+			Action.printActions();
+			Action action = Action.getAction();
 
-		Action.printActions();
-		Action action = Action.getAction();
-
-		switch (domain) {
-		case CUSTOMER:
-			CustomerController customerController = new CustomerController(
-					new CustomerServices(new CustomerDaoMysql(username, password, ip)));
-			doAction(customerController, action);
-			break;
-		case ITEM:
-			break;
-		case ITEM_ORDERS:
-			break;
-		case ORDERS:
-			break;
-		case STOP:
-			LOGGER.info("Good-bye!");
-//			boolean quit = false;
-			break;
-		default:
-			break;
+			switch (domain) {
+			case CUSTOMER:
+				CustomerController customerController = new CustomerController(
+						new CustomerServices(new CustomerDaoMysql(username, password, ip)));
+				doAction(customerController, action);
+				break;
+			case ITEM:
+				ItemController itemController = new ItemController(
+						new ItemServices(new ItemDaoMysql(username, password, ip)));
+				doAction(itemController, action);
+				break;
+			case ITEM_ORDERS:
+				break;
+			case ORDERS:
+				break;
+			case STOP:
+				stop = true;
+				break;
+			default:
+				break;
+			}
 		}
-//		}
+		LOGGER.info("Good-bye!");
 	}
 
 	public void doAction(CrudableController<?> crudController, Action action) {
