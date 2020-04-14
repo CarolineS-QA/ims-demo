@@ -36,31 +36,35 @@ public class ItemController implements CrudableController<Item> {
 
 	@Override
 	public Item create() {
-		LOGGER.info("Please enter an item name:");
+		LOGGER.info("Please enter an item name: ");
 		String itemName = getInput();
-		LOGGER.info("Please enter a price:");
+		LOGGER.info("Please enter a price: ");
 		BigDecimal price = BigDecimal.valueOf(Double.parseDouble(getInput()));
-		Item item = itemService.create(new Item(itemName, price));
+		LOGGER.info("Enter quantity in stock: ");
+		Integer stock = Integer.parseInt(getInput());
+		Item item = itemService.create(new Item(itemName, price, stock));
 		LOGGER.info("Item created!");
 		return item;
 	}
 
 	@Override
 	public Item update() {
-		LOGGER.info("Please enter the id of the item you would like to update:");
+		LOGGER.info("Please enter the id of the item you would like to update: ");
 		Long id = Long.valueOf(getInput());
-		LOGGER.info("Please enter an item name:");
+		LOGGER.info("Please enter an item name: ");
 		String itemName = getInput();
-		LOGGER.info("Please enter a price:");
+		LOGGER.info("Please enter a price: ");
 		BigDecimal price = BigDecimal.valueOf(Double.parseDouble(getInput()));
-		Item item = itemService.update(new Item(id, itemName, price));
+		LOGGER.info("Enter quantity in stock: ");
+		Integer stock = Integer.parseInt(getInput());
+		Item item = itemService.update(new Item(id, itemName, price, stock));
 		LOGGER.info("Item updated!");
 		return item;
 	}
 
 	@Override
 	public void delete() {
-		LOGGER.info("Please enter the id of the item you would like to delete:");
+		LOGGER.info("Please enter the id of the item you would like to delete: ");
 		Long id = Long.valueOf(getInput());
 		itemService.delete(id);
 		LOGGER.info("Item deleted.");

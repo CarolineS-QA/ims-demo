@@ -7,16 +7,19 @@ public class Item {
 	private Long id;
 	private String itemName;
 	private BigDecimal price;
+	private Integer stock;
 
-	public Item(String itemName, BigDecimal price) {
+	public Item(String itemName, BigDecimal price, Integer stock) {
 		this.itemName = itemName;
 		this.price = price;
+		this.stock = stock;
 	}
 
-	public Item(Long id, String itemName, BigDecimal price) {
+	public Item(Long id, String itemName, BigDecimal price, Integer stock) {
 		this.id = id;
 		this.itemName = itemName;
 		this.price = price;
+		this.stock = stock;
 	}
 
 	public Long getId() {
@@ -43,9 +46,17 @@ public class Item {
 		this.price = price;
 	}
 
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
 	@Override
 	public String toString() {
-		return "Item id: " + id + "\tName: " + itemName + "\nPrice: " + price;
+		return "Item id: " + id + " |\tName: " + itemName + " |\tPrice: " + price + " |\tStock: " + stock;
 	}
 
 	@Override
@@ -55,6 +66,7 @@ public class Item {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((itemName == null) ? 0 : itemName.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result + ((stock == null) ? 0 : stock.hashCode());
 		return result;
 	}
 
@@ -81,6 +93,11 @@ public class Item {
 			if (other.price != null)
 				return false;
 		} else if (!price.equals(other.price))
+			return false;
+		if (stock == null) {
+			if (other.stock != null)
+				return false;
+		} else if (!stock.equals(other.stock))
 			return false;
 		return true;
 	}
