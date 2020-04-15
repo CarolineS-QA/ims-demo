@@ -114,9 +114,9 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 				PreparedStatement pstmt = conn.prepareStatement(query);) {
 			pstmt.setString(1, "" + order.getCustomerId());
 			pstmt.setString(2, "" + order.getTotal());
-			pstmt.setString(3, "" + order.getId());
+			pstmt.setString(3, "" + order.getOrderId());
 			pstmt.executeUpdate();
-			return readOrder(order.getId());
+			return readOrder(order.getOrderId());
 		} catch (Exception e) {
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());

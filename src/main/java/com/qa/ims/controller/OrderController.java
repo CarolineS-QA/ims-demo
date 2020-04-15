@@ -46,12 +46,12 @@ public class OrderController implements CrudableController<Order> {
 	@Override
 	public Order update() {
 		LOGGER.info("Please enter the id of the order you would like to update:");
-		Long id = Long.valueOf(getInput());
+		Long orderId = Long.valueOf(getInput());
 		LOGGER.info("Please enter a customer id:");
 		Long customerId = Long.valueOf(getInput());
 		LOGGER.info("Please enter a total:");
 		BigDecimal total = BigDecimal.valueOf(Double.parseDouble(getInput()));
-		Order order = orderService.update(new Order(id, customerId, total));
+		Order order = orderService.update(new Order(orderId, customerId, total));
 		LOGGER.info("Order updated!");
 		return order;
 	}
@@ -59,8 +59,8 @@ public class OrderController implements CrudableController<Order> {
 	@Override
 	public void delete() {
 		LOGGER.info("Please enter the id of the order you would like to delete:");
-		Long id = Long.valueOf(getInput());
-		orderService.delete(id);
+		Long orderId = Long.valueOf(getInput());
+		orderService.delete(orderId);
 		LOGGER.info("Order deleted.");
 
 	}
