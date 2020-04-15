@@ -31,11 +31,11 @@ public class Ims {
 	public void imsSystem() {
 		LOGGER.info("Hello! Welcome to your Inventory Management System..." + "\nWhat is your instance IP? "
 				+ "\n! If you have mySQL on your machine you can use localhost:3306"
-				+ "\nThe GCP instance for this project is 35.242.180.3");
+				+ "\nYou should be given an IP and log in details before using this application.");
 		String ip = Utils.getInput();
-		LOGGER.info("What is your username");
+		LOGGER.info("Enter your username");
 		String username = Utils.getInput();
-		LOGGER.info("What is your password");
+		LOGGER.info("Enter your password");
 		String password = Utils.getInput();
 
 		init(username, password, ip);
@@ -75,7 +75,7 @@ public class Ims {
 				break;
 			}
 		}
-		LOGGER.info("Good-bye!");
+		LOGGER.info("Good-bye!" + "\nEnd of program.");
 	}
 
 	public void doAction(CrudableController<?> crudController, Action action) {
