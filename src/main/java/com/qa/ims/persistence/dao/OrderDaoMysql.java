@@ -39,10 +39,11 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	}
 
 	Order orderFromResultSet(ResultSet resultSet) throws SQLException {
-		Long id = resultSet.getLong("order_id");
+		Long orderId = resultSet.getLong("order_id");
 		Long customerId = resultSet.getLong("customer_id");
 		BigDecimal total = resultSet.getBigDecimal("total");
-		return new Order(id, customerId, total);
+		// TODO add items, qty
+		return new Order(orderId, customerId, total);
 	}
 
 	@Override
@@ -135,6 +136,30 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());
 		}
+	}
+
+	public BigDecimal calcTotalPrice(ArrayList<Long> itemIds) {
+		BigDecimal total = BigDecimal.valueOf(0);
+		for (Long id : itemIds) {
+			String priceQuery = "SELECT price FROM items WHERE item_id = '?'";
+			String qtyQuery = "SELECT qty FROM item_orders WHERE item_id = '?'";
+			try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
+					PreparedStatement pstmtPrice = conn.prepareStatement(priceQuery);
+					PreparedStatement pstmtQty = conn.prepareStatement(qtyQuery);) {
+				pstmtPrice.setString(1, "" + id);
+				ResultSet rsPrice = pstmtPrice.executeQuery();
+				Long price = rsPrice.getLong(1);
+				pstmtQty.setString(1, "" + id);
+				ResultSet rsQty = pstmtQty.executeQuery();
+				Integer qty = rsQty.getInt(1);
+				Long totalItemPrice = price * qty;
+				total = total.add(BigDecimal.valueOf(totalItemPrice));
+			} catch (Exception e) {
+				LOGGER.debug(e.getStackTrace());
+				LOGGER.error(e.getMessage());
+			}
+		}
+		return null;
 	}
 
 }
