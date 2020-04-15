@@ -84,11 +84,12 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 	 */
 	@Override
 	public Item create(Item item) {
-		String query = "INSERT INTO items(item_name, price) values(?, ?)";
+		String query = "INSERT INTO items(item_name, price, stock) values(?, ?, ?)";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = conn.prepareStatement(query);) {
 			pstmt.setString(1, item.getItemName());
 			pstmt.setString(2, "" + item.getPrice());
+			pstmt.setString(3, "" + item.getStock());
 			pstmt.executeUpdate();
 			return readLatest();
 		} catch (Exception e) {
@@ -117,12 +118,13 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 
 	@Override
 	public Item update(Item item) {
-		String query = "UPDATE items SET item_name ='?', price ='?' where item_id = '?'";
+		String query = "UPDATE items SET item_name ='?', price ='?', stock = '?' WHERE item_id = '?'";
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = connection.prepareStatement(query);) {
-			pstmt.setString(1, "" + item.getItemName());
+			pstmt.setString(1, item.getItemName());
 			pstmt.setString(2, "" + item.getPrice());
-			pstmt.setString(3, "" + item.getId());
+			pstmt.setString(3, "" + item.getStock());
+			pstmt.setString(4, "" + item.getId());
 			pstmt.executeUpdate();
 			return readItem(item.getId());
 		} catch (Exception e) {
