@@ -40,7 +40,7 @@ public class CustomerDaoMysql implements CrudableDao<Customer> {
 	}
 
 	Customer customerFromResultSet(ResultSet resultSet) throws SQLException {
-		Long id = resultSet.getLong("id");
+		Long id = resultSet.getLong("customer_id");
 		String firstName = resultSet.getString("first_name");
 		String surname = resultSet.getString("surname");
 		return new Customer(id, firstName, surname);
@@ -105,7 +105,7 @@ public class CustomerDaoMysql implements CrudableDao<Customer> {
 	public Customer readCustomer(Long id) {
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT FROM customers WHERE customer_id = " + id);) {
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM customers WHERE customer_id = " + id);) {
 			resultSet.next();
 			return customerFromResultSet(resultSet);
 		} catch (Exception e) {
@@ -121,7 +121,7 @@ public class CustomerDaoMysql implements CrudableDao<Customer> {
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement
-						.executeQuery("SELECT FROM customers WHERE first_name = " + name + "OR surname =" + name);) {
+						.executeQuery("SELECT FROM customers WHERE first_name = " + name + "OR surname = " + name);) {
 			resultSet.next();
 			return customerFromResultSet(resultSet);
 		} catch (Exception e) {

@@ -101,7 +101,7 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 	// This read method are not part of the interface
 	// TODO add overloaded redItem method for item name
 	public Item readItem(Long id) {
-		String query = "SELECT FROM items WHERE item_id = '?'";
+		String query = "SELECT * FROM items WHERE item_id = '?'";
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = connection.prepareStatement(query);) {
 			pstmt.setString(1, "" + id);
