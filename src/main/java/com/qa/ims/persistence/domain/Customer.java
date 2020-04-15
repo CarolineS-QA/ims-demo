@@ -41,8 +41,9 @@ public class Customer {
 		this.surname = surname;
 	}
 
+	@Override
 	public String toString() {
-		return "id: " + id + " |\tfirst name: " + firstName + " |\tsurname: " + surname;
+		return "Customer id: " + id + " |\tFirst name: " + firstName + " |\tSurname: " + surname;
 	}
 
 	@Override
