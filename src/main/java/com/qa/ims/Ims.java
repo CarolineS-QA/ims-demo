@@ -64,8 +64,6 @@ public class Ims {
 						new ItemServices(new ItemDaoMysql(username, password, ip)));
 				doAction(itemController, action);
 				break;
-			case ITEM_ORDERS:
-				break;
 			case ORDERS:
 				OrderController orderController = new OrderController(
 						new OrderServices(new OrderDaoMysql(username, password, ip)));
