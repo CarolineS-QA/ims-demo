@@ -1,6 +1,6 @@
 package com.qa.ims.controller;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -32,26 +32,51 @@ public class OrderController implements CrudableController<Order> {
 		return orders;
 	}
 
+	// Does not include total, this is worked out in dao.
 	@Override
 	public Order create() {
+		ArrayList<Long> items = new ArrayList<>();
+		ArrayList<Integer> qty = new ArrayList<>();
 		LOGGER.info("Please enter a customer id for the order:");
 		Long customerId = Long.valueOf(getInput());
-		LOGGER.info("Please enter a total:");
-		BigDecimal total = BigDecimal.valueOf(Double.parseDouble(getInput()));
-		Order order = orderService.update(new Order(customerId, total));
+		String moreItems = "Y";
+		while (moreItems.equalsIgnoreCase("Y")) {
+			LOGGER.info("Please enter an itemId to add to the order:");
+			LOGGER.warn("The item must exist in the item table.");
+			Long anItem = Long.valueOf(getInput());
+			items.add(anItem);
+			LOGGER.info("Please enter the qty of this item for the order: ");
+			Integer aQty = Integer.parseInt(getInput());
+			qty.add(aQty);
+			LOGGER.info("Would you like to add another item to this order? \n(Enter Y to continue adding items)");
+			moreItems = getInput();
+		}
+		Order order = orderService.create(new Order(items, qty, customerId));
 		LOGGER.info("Order created!");
 		return order;
 	}
 
 	@Override
 	public Order update() {
+		ArrayList<Long> items = new ArrayList<>();
+		ArrayList<Integer> qty = new ArrayList<>();
 		LOGGER.info("Please enter the id of the order you would like to update:");
 		Long orderId = Long.valueOf(getInput());
-		LOGGER.info("Please enter a customer id:");
+		LOGGER.info("Please enter a customer id to associate with the order:");
 		Long customerId = Long.valueOf(getInput());
-		LOGGER.info("Please enter a total:");
-		BigDecimal total = BigDecimal.valueOf(Double.parseDouble(getInput()));
-		Order order = orderService.update(new Order(orderId, customerId, total));
+		String moreItems = "Y";
+		while (moreItems.equalsIgnoreCase("Y")) {
+			LOGGER.info("Please enter an itemId to add to the order:");
+			LOGGER.warn("The item must exist in the item table.");
+			Long anItem = Long.valueOf(getInput());
+			items.add(anItem);
+			LOGGER.info("Please enter the qty of this item for the order: ");
+			Integer aQty = Integer.parseInt(getInput());
+			qty.add(aQty);
+			LOGGER.info("Would you like to add another item to this order? \n(Enter Y to continue adding items)");
+			moreItems = getInput();
+		}
+		Order order = orderService.update(new Order(items, qty, customerId, orderId));
 		LOGGER.info("Order updated!");
 		return order;
 	}
@@ -62,7 +87,6 @@ public class OrderController implements CrudableController<Order> {
 		Long orderId = Long.valueOf(getInput());
 		orderService.delete(orderId);
 		LOGGER.info("Order deleted.");
-
 	}
 
 }
