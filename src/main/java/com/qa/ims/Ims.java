@@ -75,7 +75,7 @@ public class Ims {
 				break;
 			}
 		}
-		LOGGER.info("Good-bye!" + "\nEnd of program.");
+		LOGGER.info("Good-bye! \nEnd of program.");
 	}
 
 	public void doAction(CrudableController<?> crudController, Action action) {
