@@ -8,6 +8,8 @@ public class Order {
 	private Long orderId;
 	private Long customerId;
 	private BigDecimal total;
+	private Long aItemId;
+	private Integer aQty;
 	// item_orders
 	private ArrayList<Long> items;
 	private ArrayList<Integer> qty;
@@ -55,13 +57,22 @@ public class Order {
 		this.orderId = orderId;
 	}
 
-	// full 'order'
+	// full 'order' display
 	public Order(Long orderId, Long customerId, BigDecimal total, ArrayList<Long> items, ArrayList<Integer> qty) {
 		this.orderId = orderId;
 		this.customerId = customerId;
 		this.total = total;
 		this.items = items;
 		this.qty = qty;
+	}
+
+	// full 'order' display for orderFromResultSet
+	public Order(Long orderId2, Long customerId2, BigDecimal total2, Long itemId, Integer qty2) {
+		this.orderId = orderId2;
+		this.customerId = customerId2;
+		this.total = total2;
+		this.aItemId = itemId;
+		this.aQty = qty2;
 	}
 
 	public Long getOrderId() {
@@ -102,6 +113,22 @@ public class Order {
 
 	public void setQty(ArrayList<Integer> qty) {
 		this.qty = qty;
+	}
+
+	public Long getaItemId() {
+		return aItemId;
+	}
+
+	public void setaItemId(Long aItemId) {
+		this.aItemId = aItemId;
+	}
+
+	public Integer getaQty() {
+		return aQty;
+	}
+
+	public void setaQty(Integer aQty) {
+		this.aQty = aQty;
 	}
 
 	@Override

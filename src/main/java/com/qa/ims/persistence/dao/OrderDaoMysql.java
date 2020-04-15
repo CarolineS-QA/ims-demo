@@ -39,18 +39,20 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	}
 
 	Order orderFromResultSet(ResultSet resultSet) throws SQLException {
-		Long orderId = resultSet.getLong("order_id");
-		Long customerId = resultSet.getLong("customer_id");
-		BigDecimal total = resultSet.getBigDecimal("total");
-		// TODO add items, qty
-		return new Order(orderId, customerId, total);
+		Long orderId = resultSet.getLong("orders.order_id");
+		Long customerId = resultSet.getLong("orders.customer_id");
+		BigDecimal total = resultSet.getBigDecimal("orders.total");
+		Long itemId = resultSet.getLong("item_orders.item_id");
+		Integer qty = resultSet.getInt("item_orders.qty");
+		return new Order(orderId, customerId, total, itemId, qty);
 	}
 
 	@Override
 	public List<Order> readAll() {
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT * FROM orders");) {
+				ResultSet rs = stmt.executeQuery(
+						"SELECT orders.order_id, orders.customer_id, orders.total, item_orders.item_id, item_orders.qty FROM orders LEFT JOIN item_orders ON orders.order_id=item_orders.order_id");) {
 			ArrayList<Order> orders = new ArrayList<>();
 			while (rs.next()) {
 				orders.add(orderFromResultSet(rs));
@@ -78,12 +80,21 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 
 	@Override
 	public Order create(Order order) {
-		String query = "INSERT INTO orders(customer_id, total) values(?, ?)";
+		String ordersQuery = "INSERT INTO orders(customer_id, total) values(?, ?)";
+		String item_ordersQuery = "INSERT INTO item_orders(qty) values(?) WHERE item_id = '?'";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
-				PreparedStatement pstmt = conn.prepareStatement(query);) {
-			pstmt.setLong(1, order.getCustomerId());
-			pstmt.setString(2, "" + order.getTotal());
-			pstmt.executeUpdate();
+				PreparedStatement pstmtOrders = conn.prepareStatement(ordersQuery);
+				PreparedStatement pstmtItem_Orders = conn.prepareStatement(item_ordersQuery);) {
+			pstmtOrders.setLong(1, order.getCustomerId());
+			pstmtOrders.setString(2, "" + calcTotalPrice(order.getItems()));
+			pstmtOrders.executeUpdate();
+			ArrayList<Long> itemIds = order.getItems();
+			ArrayList<Integer> qty = order.getQty();
+			for (Long id : itemIds) {
+				pstmtItem_Orders.setString(1, "" + qty.get(id.intValue()));
+				pstmtItem_Orders.setString(2, "" + id);
+				pstmtItem_Orders.executeUpdate();
+			}
 			return readLatest();
 		} catch (Exception e) {
 			LOGGER.debug(e.getStackTrace());
@@ -94,7 +105,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 
 	// TODO add utility to read using customer_id instead of order_id
 	public Order readOrder(Long id) {
-		String query = "SELECT * FROM orders WHERE order_id = '?'";
+		String query = "SELECT orders.order_id, orders.customer_id, orders.total, item_orders.item_id, item_orders.qty FROM orders LEFT JOIN item_orders ON orders.order_id=item_orders.order_id WHERE order_id = '?'";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = conn.prepareStatement(query);) {
 			pstmt.setString(1, "" + id);
@@ -110,13 +121,22 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 
 	@Override
 	public Order update(Order order) {
-		String query = "UPDATE orders SET customer_id ='?', total ='?' where order_id = '?'";
+		String query = "UPDATE orders SET customer_id ='?', total ='?' WHERE order_id = '?'";
+		String qtyQuery = "UPDATE item_orders SET qty = '?' WHERE item_id = '?'";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
-				PreparedStatement pstmt = conn.prepareStatement(query);) {
+				PreparedStatement pstmt = conn.prepareStatement(query);
+				PreparedStatement pstmtItem_Orders = conn.prepareStatement(qtyQuery);) {
 			pstmt.setString(1, "" + order.getCustomerId());
-			pstmt.setString(2, "" + order.getTotal());
+			pstmt.setString(2, "" + calcTotalPrice(order.getItems()));
 			pstmt.setString(3, "" + order.getOrderId());
 			pstmt.executeUpdate();
+			ArrayList<Long> itemIds = order.getItems();
+			ArrayList<Integer> qty = order.getQty();
+			for (Long id : itemIds) {
+				pstmtItem_Orders.setString(1, "" + qty.get(id.intValue()));
+				pstmtItem_Orders.setString(2, "" + id);
+				pstmtItem_Orders.executeUpdate();
+			}
 			return readOrder(order.getOrderId());
 		} catch (Exception e) {
 			LOGGER.debug(e.getStackTrace());
@@ -159,7 +179,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 				LOGGER.error(e.getMessage());
 			}
 		}
-		return null;
+		return total;
 	}
 
 }
