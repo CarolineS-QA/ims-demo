@@ -31,7 +31,15 @@ public class Order {
 		this.qty = qty;
 	}
 
-	// new order constructors
+	// new order without total (to calc in dao), reordered to be distinct from
+	// item_orders
+	public Order(ArrayList<Long> items, ArrayList<Integer> qty, Long customerId) {
+		this.items = items;
+		this.qty = qty;
+		this.customerId = customerId;
+	}
+
+	// new order with total
 	public Order(Long customerId, BigDecimal total, ArrayList<Long> items, ArrayList<Integer> qty) {
 		this.customerId = customerId;
 		this.total = total;
@@ -39,6 +47,7 @@ public class Order {
 		this.qty = qty;
 	}
 
+	// full 'order' for update
 	public Order(Long orderId, Long customerId, BigDecimal total, ArrayList<Long> items, ArrayList<Integer> qty) {
 		this.orderId = orderId;
 		this.customerId = customerId;
