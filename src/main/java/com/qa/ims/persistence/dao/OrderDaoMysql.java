@@ -21,18 +21,14 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	private String jdbcConnectionUrl;
 	private String username;
 	private String password;
-	@SuppressWarnings("unused")
-	private String ip;
 
 	public OrderDaoMysql(String username, String password, String ip) {
-		this.ip = ip;
 		this.jdbcConnectionUrl = "jdbc:mysql://" + ip + "/ims";
 		this.username = username;
 		this.password = password;
 	}
 
 	public OrderDaoMysql(String jdbcConnectionUrl, String username, String password, String ip) {
-		this.ip = ip;
 		this.jdbcConnectionUrl = jdbcConnectionUrl;
 		this.username = username;
 		this.password = password;
@@ -68,7 +64,8 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	public Order readLatest() {
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT * FROM orders ORDER BY order_id DESC LIMIT 1");) {
+				ResultSet rs = stmt.executeQuery(
+						"SELECT orders.order_id, orders.customer_id, orders.total, item_orders.item_id, item_orders.qty FROM orders LEFT JOIN item_orders ON orders.order_id=item_orders.order_id ORDER BY order_id DESC LIMIT 1");) {
 			rs.next();
 			return orderFromResultSet(rs);
 		} catch (Exception e) {
@@ -78,24 +75,45 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 		return null;
 	}
 
+	/*
+	 * #Catch22 work around. To calculate the order total I use calcTotalPrice which
+	 * requires values in the item_orders table So, I insert total as null because I
+	 * need an order in orders to insert into the item_orders table! The orderId is
+	 * auto-generated so I need to retrieve it to insert into item_orders Only then
+	 * I add the calculated total price to the orders table
+	 */
 	@Override
 	public Order create(Order order) {
-		String ordersQuery = "INSERT INTO orders(customer_id, total) values(?, ?)";
-		String item_ordersQuery = "INSERT INTO item_orders(qty) values(?) WHERE item_id = ?";
+		String ordersQuery = "INSERT INTO orders(customer_id, total) values(?, null)";
+		String getIdQuery = "SELECT order_id FROM orders ORDER BY order_id DESC LIMIT 1";
+		String itemOrdersQuery = "INSERT INTO item_orders(order_id, item_id, qty) values(?, ?, ?)";
+		String totalQuery = "UPDATE orders SET total = ? WHERE order_id = ?";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
-				PreparedStatement pstmtOrders = conn.prepareStatement(ordersQuery);
-				PreparedStatement pstmtItem_Orders = conn.prepareStatement(item_ordersQuery);) {
-			pstmtOrders.setLong(1, order.getCustomerId());
-			pstmtOrders.setString(2, "" + calcTotalPrice(order.getItems()));
-			pstmtOrders.executeUpdate();
+				PreparedStatement ordersPstmt = conn.prepareStatement(ordersQuery);
+				PreparedStatement getIdPstmt = conn.prepareStatement(getIdQuery);
+				PreparedStatement itemOrdersPstmt = conn.prepareStatement(itemOrdersQuery);
+				PreparedStatement totalPstmt = conn.prepareStatement(totalQuery);) {
+			ordersPstmt.setLong(1, order.getCustomerId());
+			ordersPstmt.executeUpdate();
+			ResultSet rs = getIdPstmt.executeQuery();
+			rs.next();
+			Long currentOrderId = rs.getLong("order_id");
 			ArrayList<Long> itemIds = order.getItems();
 			ArrayList<Integer> qty = order.getQty();
 			for (Long id : itemIds) {
-				pstmtItem_Orders.setString(1, "" + qty.get(id.intValue()));
-				pstmtItem_Orders.setString(2, "" + id);
-				pstmtItem_Orders.executeUpdate();
+				itemOrdersPstmt.setString(1, "" + currentOrderId);
+				itemOrdersPstmt.setString(2, "" + id);
+				itemOrdersPstmt.setString(3, "" + qty.get(itemIds.indexOf(id)));
+				itemOrdersPstmt.executeUpdate();
 			}
+			totalPstmt.setString(1, "" + calcTotalPrice(order.getItems()));
+			totalPstmt.setString(2, "" + currentOrderId);
+			totalPstmt.executeUpdate();
 			return readLatest();
+		} catch (SQLException sqle) {
+			LOGGER.info("An SQL Exception was thrown!");
+			LOGGER.debug(sqle.getStackTrace());
+			LOGGER.error(sqle.getMessage());
 		} catch (Exception e) {
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());
@@ -122,10 +140,10 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	@Override
 	public Order update(Order order) {
 		String query = "UPDATE orders SET customer_id = ?, total = ? WHERE order_id = ?";
-		String qtyQuery = "UPDATE item_orders SET qty = ? WHERE item_id = ?";
+		String qtyQuery = "UPDATE item_orders SET qty = ? WHERE item_id = ? AND order_id = ?";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = conn.prepareStatement(query);
-				PreparedStatement pstmtItem_Orders = conn.prepareStatement(qtyQuery);) {
+				PreparedStatement pstmtItemOrders = conn.prepareStatement(qtyQuery);) {
 			pstmt.setString(1, "" + order.getCustomerId());
 			pstmt.setString(2, "" + calcTotalPrice(order.getItems()));
 			pstmt.setString(3, "" + order.getOrderId());
@@ -133,9 +151,10 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			ArrayList<Long> itemIds = order.getItems();
 			ArrayList<Integer> qty = order.getQty();
 			for (Long id : itemIds) {
-				pstmtItem_Orders.setString(1, "" + qty.get(id.intValue()));
-				pstmtItem_Orders.setString(2, "" + id);
-				pstmtItem_Orders.executeUpdate();
+				pstmtItemOrders.setString(1, "" + qty.get(id.intValue()));
+				pstmtItemOrders.setString(2, "" + id);
+				pstmtItemOrders.setString(3, "" + order.getOrderId());
+				pstmtItemOrders.executeUpdate();
 			}
 			return readOrder(order.getOrderId());
 		} catch (Exception e) {
@@ -147,11 +166,15 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 
 	@Override
 	public void delete(long id) {
-		String query = "DELETE FROM orders WHERE order_id = ?";
+		String itemOrdersQuery = "DELETE FROM item_orders WHERE order_id = ?";
+		String ordersQuery = "DELETE FROM orders WHERE order_id = ?";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
-				PreparedStatement pstmt = conn.prepareStatement(query);) {
-			pstmt.setString(1, "" + id);
-			pstmt.executeUpdate();
+				PreparedStatement itemOrdersPstmt = conn.prepareStatement(itemOrdersQuery);
+				PreparedStatement ordersPstmt = conn.prepareStatement(ordersQuery);) {
+			itemOrdersPstmt.setString(1, "" + id);
+			itemOrdersPstmt.executeUpdate();
+			ordersPstmt.setString(1, "" + id);
+			ordersPstmt.executeUpdate();
 		} catch (Exception e) {
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());
@@ -168,12 +191,18 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 					PreparedStatement pstmtQty = conn.prepareStatement(qtyQuery);) {
 				pstmtPrice.setString(1, "" + id);
 				ResultSet rsPrice = pstmtPrice.executeQuery();
+				rsPrice.next();
 				Long price = rsPrice.getLong(1);
 				pstmtQty.setString(1, "" + id);
 				ResultSet rsQty = pstmtQty.executeQuery();
+				rsQty.next();
 				Integer qty = rsQty.getInt(1);
 				Long totalItemPrice = price * qty;
 				total = total.add(BigDecimal.valueOf(totalItemPrice));
+			} catch (SQLException sqle) {
+				LOGGER.info("An SQL Exception was thrown in the calcTotalPrice method.");
+				LOGGER.debug(sqle.getStackTrace());
+				LOGGER.error(sqle.getMessage());
 			} catch (Exception e) {
 				LOGGER.debug(e.getStackTrace());
 				LOGGER.error(e.getMessage());
