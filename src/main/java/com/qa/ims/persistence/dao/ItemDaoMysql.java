@@ -99,10 +99,10 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 		return null;
 	}
 
-	// This read method are not part of the interface
-	// TODO add overloaded redItem method for item name
+	// This read method is not part of the interface
+	// TODO add overloaded readItem method for item name
 	public Item readItem(Long id) {
-		String query = "SELECT * FROM items WHERE item_id = '?'";
+		String query = "SELECT * FROM items WHERE item_id = ?";
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = connection.prepareStatement(query);) {
 			pstmt.setString(1, "" + id);
@@ -118,7 +118,7 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 
 	@Override
 	public Item update(Item item) {
-		String query = "UPDATE items SET item_name ='?', price ='?', stock = '?' WHERE item_id = '?'";
+		String query = "UPDATE items SET item_name = ?, price = ?, stock = ? WHERE item_id = ?";
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = connection.prepareStatement(query);) {
 			pstmt.setString(1, item.getItemName());
@@ -136,7 +136,7 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 
 	@Override
 	public void delete(long id) {
-		String query = "DELETE FROM items WHERE item_id = '?'";
+		String query = "DELETE FROM items WHERE item_id = ?";
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = connection.prepareStatement(query);) {
 			pstmt.setString(1, "" + id);

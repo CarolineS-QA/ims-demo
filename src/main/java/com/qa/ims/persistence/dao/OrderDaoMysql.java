@@ -81,7 +81,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	@Override
 	public Order create(Order order) {
 		String ordersQuery = "INSERT INTO orders(customer_id, total) values(?, ?)";
-		String item_ordersQuery = "INSERT INTO item_orders(qty) values(?) WHERE item_id = '?'";
+		String item_ordersQuery = "INSERT INTO item_orders(qty) values(?) WHERE item_id = ?";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmtOrders = conn.prepareStatement(ordersQuery);
 				PreparedStatement pstmtItem_Orders = conn.prepareStatement(item_ordersQuery);) {
@@ -105,7 +105,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 
 	// TODO add utility to read using customer_id instead of order_id
 	public Order readOrder(Long id) {
-		String query = "SELECT orders.order_id, orders.customer_id, orders.total, item_orders.item_id, item_orders.qty FROM orders LEFT JOIN item_orders ON orders.order_id=item_orders.order_id WHERE order_id = '?'";
+		String query = "SELECT orders.order_id, orders.customer_id, orders.total, item_orders.item_id, item_orders.qty FROM orders LEFT JOIN item_orders ON orders.order_id=item_orders.order_id WHERE order_id = ?";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = conn.prepareStatement(query);) {
 			pstmt.setString(1, "" + id);
@@ -121,8 +121,8 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 
 	@Override
 	public Order update(Order order) {
-		String query = "UPDATE orders SET customer_id ='?', total ='?' WHERE order_id = '?'";
-		String qtyQuery = "UPDATE item_orders SET qty = '?' WHERE item_id = '?'";
+		String query = "UPDATE orders SET customer_id = ?, total = ? WHERE order_id = ?";
+		String qtyQuery = "UPDATE item_orders SET qty = ? WHERE item_id = ?";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = conn.prepareStatement(query);
 				PreparedStatement pstmtItem_Orders = conn.prepareStatement(qtyQuery);) {
@@ -147,7 +147,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 
 	@Override
 	public void delete(long id) {
-		String query = "DELETE FROM orders WHERE order_id = '?'";
+		String query = "DELETE FROM orders WHERE order_id = ?";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = conn.prepareStatement(query);) {
 			pstmt.setString(1, "" + id);
@@ -161,8 +161,8 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	public BigDecimal calcTotalPrice(ArrayList<Long> itemIds) {
 		BigDecimal total = BigDecimal.valueOf(0);
 		for (Long id : itemIds) {
-			String priceQuery = "SELECT price FROM items WHERE item_id = '?'";
-			String qtyQuery = "SELECT qty FROM item_orders WHERE item_id = '?'";
+			String priceQuery = "SELECT price FROM items WHERE item_id = ?";
+			String qtyQuery = "SELECT qty FROM item_orders WHERE item_id = ?";
 			try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 					PreparedStatement pstmtPrice = conn.prepareStatement(priceQuery);
 					PreparedStatement pstmtQty = conn.prepareStatement(qtyQuery);) {
