@@ -70,7 +70,7 @@ public class OrderTest {
 	// Add more tests here!
 	@Test
 	public void toStringTest() {
-		String toString = "Item id: 1 |\tName: Testing for Dummies |\tPrice: 7.99 |\tStock: 50";
+		String toString = "Order id: 1 |\t Customer id: 1 |\tTotal: 7.99";
 		assertEquals(toString, order.toString());
 	}
 
