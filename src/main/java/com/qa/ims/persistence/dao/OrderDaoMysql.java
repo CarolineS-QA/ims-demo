@@ -34,24 +34,37 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 		this.password = password;
 	}
 
-	Order orderFromResultSet(ResultSet resultSet) throws SQLException {
-		Long orderId = resultSet.getLong("orders.order_id");
+	Order orderFromResultSet(ResultSet resultSet, Long orderId) throws SQLException {
 		Long customerId = resultSet.getLong("orders.customer_id");
 		BigDecimal total = resultSet.getBigDecimal("orders.total");
-		Long anItemid = resultSet.getLong("item_orders.item_id");
-		Integer aQty = resultSet.getInt("item_orders.qty");
-		return new Order(orderId, customerId, total, anItemid, aQty);
+		String query = "SELECT * FROM item_orders WHERE order_id = ?";
+		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
+				PreparedStatement pstmt = conn.prepareStatement(query);) {
+			ArrayList<Long> itemIds = new ArrayList<>();
+			ArrayList<Integer> qtys = new ArrayList<>();
+			pstmt.setString(1, orderId.toString());
+			ResultSet itemRs = pstmt.executeQuery();
+			while (itemRs.next()) {
+				itemIds.add(itemRs.getLong("item_id"));
+				qtys.add(itemRs.getInt("qty"));
+			}
+			return new Order(orderId, customerId, total, itemIds, qtys);
+		} catch (SQLException sqle) {
+			LOGGER.info("There was a problem with the orderFromResultSet method");
+			LOGGER.debug(sqle.getStackTrace());
+			LOGGER.error(sqle.getMessage());
+		}
+		return null;
 	}
 
 	@Override
 	public List<Order> readAll() {
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(
-						"SELECT orders.order_id, orders.customer_id, orders.total, item_orders.item_id, item_orders.qty FROM orders LEFT JOIN item_orders ON orders.order_id=item_orders.order_id");) {
+				ResultSet rs = stmt.executeQuery("SELECT * FROM orders");) {
 			ArrayList<Order> orders = new ArrayList<>();
 			while (rs.next()) {
-				orders.add(orderFromResultSet(rs));
+				orders.add(orderFromResultSet(rs, rs.getLong("orders.order_id")));
 			}
 			return orders;
 		} catch (SQLException sqle) {
@@ -67,7 +80,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 				ResultSet rs = stmt.executeQuery(
 						"SELECT orders.order_id, orders.customer_id, orders.total, item_orders.item_id, item_orders.qty FROM orders LEFT JOIN item_orders ON orders.order_id=item_orders.order_id ORDER BY order_id DESC LIMIT 1");) {
 			rs.next();
-			return orderFromResultSet(rs);
+			return orderFromResultSet(rs, rs.getLong("orders.order_id"));
 		} catch (Exception e) {
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());
@@ -129,7 +142,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			pstmt.setString(1, "" + id);
 			ResultSet rs = pstmt.executeQuery();
 			rs.next();
-			return orderFromResultSet(rs);
+			return orderFromResultSet(rs, rs.getLong("orders.order_id"));
 		} catch (Exception e) {
 			LOGGER.info("There was a problem trying to read your order.");
 			LOGGER.debug(e.getStackTrace());
