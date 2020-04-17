@@ -38,9 +38,9 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 		Long orderId = resultSet.getLong("orders.order_id");
 		Long customerId = resultSet.getLong("orders.customer_id");
 		BigDecimal total = resultSet.getBigDecimal("orders.total");
-		Long itemId = resultSet.getLong("item_orders.item_id");
-		Integer qty = resultSet.getInt("item_orders.qty");
-		return new Order(orderId, customerId, total, itemId, qty);
+		Long anItemid = resultSet.getLong("item_orders.item_id");
+		Integer aQty = resultSet.getInt("item_orders.qty");
+		return new Order(orderId, customerId, total, anItemid, aQty);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 				itemOrdersPstmt.setString(3, "" + qty.get(itemIds.indexOf(id)));
 				itemOrdersPstmt.executeUpdate();
 			}
-			totalPstmt.setString(1, "" + calcTotalPrice(order.getItems()));
+			totalPstmt.setString(1, "" + calcTotalPrice(order.getItems(), order.getQty()));
 			totalPstmt.setString(2, "" + currentOrderId);
 			totalPstmt.executeUpdate();
 			return readLatest();
@@ -163,23 +163,18 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 		}
 	}
 
-	public BigDecimal calcTotalPrice(ArrayList<Long> itemIds) {
+	public BigDecimal calcTotalPrice(ArrayList<Long> itemIds, ArrayList<Integer> qty) {
 		BigDecimal total = BigDecimal.valueOf(0);
 		for (Long id : itemIds) {
 			String priceQuery = "SELECT price FROM items WHERE item_id = ?";
-			String qtyQuery = "SELECT qty FROM item_orders WHERE item_id = ?";
 			try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
-					PreparedStatement pstmtPrice = conn.prepareStatement(priceQuery);
-					PreparedStatement pstmtQty = conn.prepareStatement(qtyQuery);) {
+					PreparedStatement pstmtPrice = conn.prepareStatement(priceQuery);) {
 				pstmtPrice.setString(1, "" + id);
 				ResultSet rsPrice = pstmtPrice.executeQuery();
 				rsPrice.next();
 				Long price = rsPrice.getLong(1);
-				pstmtQty.setString(1, "" + id);
-				ResultSet rsQty = pstmtQty.executeQuery();
-				rsQty.next();
-				Integer qty = rsQty.getInt(1);
-				Long totalItemPrice = price * qty;
+				Integer aQty = qty.get(itemIds.indexOf(id));
+				Long totalItemPrice = price * aQty;
 				total = total.add(BigDecimal.valueOf(totalItemPrice));
 			} catch (SQLException sqle) {
 				LOGGER.info("An SQL Exception was thrown in the calcTotalPrice method.");
