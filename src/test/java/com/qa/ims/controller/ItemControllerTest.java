@@ -60,9 +60,9 @@ public class ItemControllerTest {
 		String id = "1";
 		String itemName = "Java be like that";
 		BigDecimal price = BigDecimal.valueOf(39.99);
-		Integer stock = 200;
+		Integer stock = 300;
 		String priceInput = "5.99";
-		String stockInput = "3";
+		String stockInput = "300";
 		Mockito.doReturn(id, itemName, priceInput, stockInput).when(itemController).getInput();
 		Item item = new Item(1L, itemName, price, stock);
 		Mockito.when(itemServices.update(item)).thenReturn(item);
