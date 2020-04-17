@@ -1,7 +1,7 @@
 package com.qa.ims.persistence.domain;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Order {
 
@@ -9,19 +9,19 @@ public class Order {
 	private Long customerId;
 	private BigDecimal total;
 	// item_orders
-	private ArrayList<Long> items;
-	private ArrayList<Integer> qty;
+	private List<Long> items;
+	private List<Integer> qty;
 
 	// create new order without total (to calc in dao)
 	// reordered to be distinct from item_orders
-	public Order(ArrayList<Long> items, ArrayList<Integer> qty, Long customerId) {
+	public Order(List<Long> items, List<Integer> qty, Long customerId) {
 		this.items = items;
 		this.qty = qty;
 		this.customerId = customerId;
 	}
 
 	// create new order with total
-	public Order(Long customerId, BigDecimal total, ArrayList<Long> items, ArrayList<Integer> qty) {
+	public Order(Long customerId, BigDecimal total, List<Long> items, List<Integer> qty) {
 		this.customerId = customerId;
 		this.total = total;
 		this.items = items;
@@ -29,7 +29,7 @@ public class Order {
 	}
 
 	// update new order without total
-	public Order(ArrayList<Long> items, ArrayList<Integer> qty, Long customerId, Long orderId) {
+	public Order(List<Long> items, List<Integer> qty, Long customerId, Long orderId) {
 		this.items = items;
 		this.qty = qty;
 		this.customerId = customerId;
@@ -37,7 +37,7 @@ public class Order {
 	}
 
 	// full 'order' display for ordersFromResultSet
-	public Order(Long orderId, Long customerId, BigDecimal total, ArrayList<Long> items, ArrayList<Integer> qty) {
+	public Order(Long orderId, Long customerId, BigDecimal total, List<Long> items, List<Integer> qty) {
 		this.orderId = orderId;
 		this.customerId = customerId;
 		this.total = total;
@@ -69,19 +69,19 @@ public class Order {
 		this.total = total;
 	}
 
-	public ArrayList<Long> getItems() {
+	public List<Long> getItems() {
 		return items;
 	}
 
-	public void setItems(ArrayList<Long> items) {
+	public void setItems(List<Long> items) {
 		this.items = items;
 	}
 
-	public ArrayList<Integer> getQty() {
+	public List<Integer> getQty() {
 		return qty;
 	}
 
-	public void setQty(ArrayList<Integer> qty) {
+	public void setQty(List<Integer> qty) {
 		this.qty = qty;
 	}
 

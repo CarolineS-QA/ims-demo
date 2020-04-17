@@ -16,7 +16,7 @@ import com.qa.ims.persistence.domain.Order;
 
 public class OrderDaoMysql implements CrudableDao<Order> {
 
-	public static final Logger LOGGER = Logger.getLogger(CustomerDaoMysql.class);
+	public static final Logger LOGGER = Logger.getLogger(OrderDaoMysql.class);
 
 	private String jdbcConnectionUrl;
 	private String username;
@@ -44,8 +44,8 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 		String query = "SELECT * FROM item_orders WHERE order_id = ?";
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = conn.prepareStatement(query);) {
-			ArrayList<Long> itemIds = new ArrayList<>();
-			ArrayList<Integer> qtys = new ArrayList<>();
+			List<Long> itemIds = new ArrayList<>();
+			List<Integer> qtys = new ArrayList<>();
 			pstmt.setString(1, orderId.toString());
 			try (ResultSet itemRs = pstmt.executeQuery();) {
 				while (itemRs.next()) {
@@ -119,8 +119,8 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			try (ResultSet rs = getIdPstmt.executeQuery();) {
 				rs.next();
 				Long currentOrderId = rs.getLong("order_id");
-				ArrayList<Long> itemIds = order.getItems();
-				ArrayList<Integer> qty = order.getQty();
+				List<Long> itemIds = order.getItems();
+				List<Integer> qty = order.getQty();
 				for (Long id : itemIds) {
 					itemOrdersPstmt.setString(1, "" + currentOrderId);
 					itemOrdersPstmt.setString(2, "" + id);
@@ -186,7 +186,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 		}
 	}
 
-	public BigDecimal calcTotalPrice(ArrayList<Long> itemIds, ArrayList<Integer> qty) {
+	public BigDecimal calcTotalPrice(List<Long> itemIds, List<Integer> qty) {
 		BigDecimal total = BigDecimal.valueOf(0);
 		for (Long id : itemIds) {
 			String priceQuery = "SELECT price FROM items WHERE item_id = ?";
