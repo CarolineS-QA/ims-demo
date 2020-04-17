@@ -21,6 +21,8 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	private String jdbcConnectionUrl;
 	private String username;
 	private String password;
+	@SuppressWarnings("unused")
+	private String ip; // needed to differenticate constructors. As can't have two Stringx3 args.
 	private String orderIdFromTable = "order.order_id";
 
 	public OrderDaoMysql(String username, String password, String ip) {
@@ -33,6 +35,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 		this.jdbcConnectionUrl = jdbcConnectionUrl;
 		this.username = username;
 		this.password = password;
+		this.ip = ip;
 	}
 
 	Order orderFromResultSet(ResultSet resultSet, Long orderId) throws SQLException {
