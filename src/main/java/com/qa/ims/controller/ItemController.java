@@ -31,6 +31,7 @@ public class ItemController implements CrudableController<Item> {
 		for (Item item : items) {
 			LOGGER.info(item.toString());
 		}
+		LOGGER.info("");
 		return items;
 	}
 

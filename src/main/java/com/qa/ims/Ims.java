@@ -54,17 +54,15 @@ public class Ims {
 			Action action = Action.getAction();
 
 			switch (domain) {
-			case CUSTOMER:
+			case CUSTOMERS:
 				CustomerController customerController = new CustomerController(
 						new CustomerServices(new CustomerDaoMysql(username, password, ip)));
 				doAction(customerController, action);
 				break;
-			case ITEM:
+			case ITEMS:
 				ItemController itemController = new ItemController(
 						new ItemServices(new ItemDaoMysql(username, password, ip)));
 				doAction(itemController, action);
-				break;
-			case ITEM_ORDERS:
 				break;
 			case ORDERS:
 				OrderController orderController = new OrderController(

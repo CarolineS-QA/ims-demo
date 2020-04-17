@@ -1,30 +1,56 @@
 package com.qa.ims.persistence.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class Order {
 
-	private Long id;
+	private Long orderId;
 	private Long customerId;
 	private BigDecimal total;
+	// item_orders
+	private ArrayList<Long> items;
+	private ArrayList<Integer> qty;
 
-	public Order(Long customerId, BigDecimal total) {
+	// create new order without total (to calc in dao)
+	// reordered to be distinct from item_orders
+	public Order(ArrayList<Long> items, ArrayList<Integer> qty, Long customerId) {
+		this.items = items;
+		this.qty = qty;
+		this.customerId = customerId;
+	}
+
+	// create new order with total
+	public Order(Long customerId, BigDecimal total, ArrayList<Long> items, ArrayList<Integer> qty) {
 		this.customerId = customerId;
 		this.total = total;
+		this.items = items;
+		this.qty = qty;
 	}
 
-	public Order(Long id, Long customerId, BigDecimal total) {
-		this.id = id;
+	// update new order without total
+	public Order(ArrayList<Long> items, ArrayList<Integer> qty, Long customerId, Long orderId) {
+		this.items = items;
+		this.qty = qty;
+		this.customerId = customerId;
+		this.orderId = orderId;
+	}
+
+	// full 'order' display for ordersFromResultSet
+	public Order(Long orderId, Long customerId, BigDecimal total, ArrayList<Long> items, ArrayList<Integer> qty) {
+		this.orderId = orderId;
 		this.customerId = customerId;
 		this.total = total;
+		this.items = items;
+		this.qty = qty;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public Long getCustomerId() {
@@ -43,46 +69,26 @@ public class Order {
 		this.total = total;
 	}
 
+	public ArrayList<Long> getItems() {
+		return items;
+	}
+
+	public void setItems(ArrayList<Long> items) {
+		this.items = items;
+	}
+
+	public ArrayList<Integer> getQty() {
+		return qty;
+	}
+
+	public void setQty(ArrayList<Integer> qty) {
+		this.qty = qty;
+	}
+
 	@Override
 	public String toString() {
-		return "Order id: " + id + " |\t Customer id: " + customerId + " |\tTotal: " + total;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((customerId == null) ? 0 : customerId.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((total == null) ? 0 : total.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Order other = (Order) obj;
-		if (customerId == null) {
-			if (other.customerId != null)
-				return false;
-		} else if (!customerId.equals(other.customerId))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (total == null) {
-			if (other.total != null)
-				return false;
-		} else if (!total.equals(other.total))
-			return false;
-		return true;
+		return "Order id: " + orderId + " |\t Customer id: " + customerId + " |\tTotal: " + total + "\nItems: " + items
+				+ " |\t Qty: " + qty;
 	}
 
 }

@@ -8,13 +8,13 @@ public class DomainTest {
 
 	@Test
 	public void customerTest() {
-		Domain domain = Domain.CUSTOMER;
+		Domain domain = Domain.CUSTOMERS;
 		assertTrue(domain.getDescription().toLowerCase().contains("customer"));
 	}
 
 	@Test
 	public void itemTest() {
-		Domain domain = Domain.ITEM;
+		Domain domain = Domain.ITEMS;
 		assertTrue(domain.getDescription().toLowerCase().contains("item"));
 	}
 
