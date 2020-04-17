@@ -29,7 +29,7 @@ public class OrderController implements CrudableController<Order> {
 		for (Order order : orders) {
 			LOGGER.info(order.toString());
 		}
-		LOGGER.info("");
+		LOGGER.info(" - end of orders - \n");
 		return orders;
 	}
 
