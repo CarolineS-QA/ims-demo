@@ -43,16 +43,20 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			ArrayList<Long> itemIds = new ArrayList<>();
 			ArrayList<Integer> qtys = new ArrayList<>();
 			pstmt.setString(1, orderId.toString());
-			ResultSet itemRs = pstmt.executeQuery();
-			while (itemRs.next()) {
-				itemIds.add(itemRs.getLong("item_id"));
-				qtys.add(itemRs.getInt("qty"));
+			try (ResultSet itemRs = pstmt.executeQuery();) {
+				while (itemRs.next()) {
+					itemIds.add(itemRs.getLong("item_id"));
+					qtys.add(itemRs.getInt("qty"));
+				}
+				return new Order(orderId, customerId, total, itemIds, qtys);
 			}
-			return new Order(orderId, customerId, total, itemIds, qtys);
 		} catch (SQLException sqle) {
-			LOGGER.info("There was a problem with the orderFromResultSet method");
+			LOGGER.info("An SQL Exception was thrown in the orderFromResultSet method");
 			LOGGER.debug(sqle.getStackTrace());
 			LOGGER.error(sqle.getMessage());
+		} catch (Exception e) {
+			LOGGER.debug(e.getStackTrace());
+			LOGGER.error(e.getMessage());
 		}
 		return null;
 	}
@@ -108,23 +112,24 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 				PreparedStatement totalPstmt = conn.prepareStatement(totalQuery);) {
 			ordersPstmt.setLong(1, order.getCustomerId());
 			ordersPstmt.executeUpdate();
-			ResultSet rs = getIdPstmt.executeQuery();
-			rs.next();
-			Long currentOrderId = rs.getLong("order_id");
-			ArrayList<Long> itemIds = order.getItems();
-			ArrayList<Integer> qty = order.getQty();
-			for (Long id : itemIds) {
-				itemOrdersPstmt.setString(1, "" + currentOrderId);
-				itemOrdersPstmt.setString(2, "" + id);
-				itemOrdersPstmt.setString(3, "" + qty.get(itemIds.indexOf(id)));
-				itemOrdersPstmt.executeUpdate();
+			try (ResultSet rs = getIdPstmt.executeQuery();) {
+				rs.next();
+				Long currentOrderId = rs.getLong("order_id");
+				ArrayList<Long> itemIds = order.getItems();
+				ArrayList<Integer> qty = order.getQty();
+				for (Long id : itemIds) {
+					itemOrdersPstmt.setString(1, "" + currentOrderId);
+					itemOrdersPstmt.setString(2, "" + id);
+					itemOrdersPstmt.setString(3, "" + qty.get(itemIds.indexOf(id)));
+					itemOrdersPstmt.executeUpdate();
+				}
+				totalPstmt.setString(1, "" + calcTotalPrice(order.getItems(), order.getQty()));
+				totalPstmt.setString(2, "" + currentOrderId);
+				totalPstmt.executeUpdate();
+				return readLatest();
 			}
-			totalPstmt.setString(1, "" + calcTotalPrice(order.getItems(), order.getQty()));
-			totalPstmt.setString(2, "" + currentOrderId);
-			totalPstmt.executeUpdate();
-			return readLatest();
 		} catch (SQLException sqle) {
-			LOGGER.info("An SQL Exception was thrown!");
+			LOGGER.info("An SQL Exception was thrown in the create method!");
 			LOGGER.debug(sqle.getStackTrace());
 			LOGGER.error(sqle.getMessage());
 		} catch (Exception e) {
@@ -140,9 +145,10 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = conn.prepareStatement(query);) {
 			pstmt.setString(1, "" + id);
-			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			return orderFromResultSet(rs, rs.getLong("orders.order_id"));
+			try (ResultSet rs = pstmt.executeQuery();) {
+				rs.next();
+				return orderFromResultSet(rs, rs.getLong("orders.order_id"));
+			}
 		} catch (Exception e) {
 			LOGGER.info("There was a problem trying to read your order.");
 			LOGGER.debug(e.getStackTrace());
@@ -183,12 +189,13 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 					PreparedStatement pstmtPrice = conn.prepareStatement(priceQuery);) {
 				pstmtPrice.setString(1, "" + id);
-				ResultSet rsPrice = pstmtPrice.executeQuery();
-				rsPrice.next();
-				Long price = rsPrice.getLong(1);
-				Integer aQty = qty.get(itemIds.indexOf(id));
-				Long totalItemPrice = price * aQty;
-				total = total.add(BigDecimal.valueOf(totalItemPrice));
+				try (ResultSet rsPrice = pstmtPrice.executeQuery();) {
+					rsPrice.next();
+					Long price = rsPrice.getLong(1);
+					Integer aQty = qty.get(itemIds.indexOf(id));
+					Long totalItemPrice = price * aQty;
+					total = total.add(BigDecimal.valueOf(totalItemPrice));
+				}
 			} catch (SQLException sqle) {
 				LOGGER.info("An SQL Exception was thrown in the calcTotalPrice method.");
 				LOGGER.debug(sqle.getStackTrace());
