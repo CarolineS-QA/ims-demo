@@ -1,6 +1,6 @@
 package com.qa.ims.services;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,9 @@ public class OrderServicesTest {
 
 	@Test
 	public void orderServicesCreate() {
-		Order order = new Order(1L, BigDecimal.valueOf(7.99));
+		ArrayList<Long> items = new ArrayList<>();
+		ArrayList<Integer> qty = new ArrayList<>();
+		Order order = new Order(items, qty, 1L);
 		orderServices.create(order);
 		Mockito.verify(orderDao, Mockito.times(1)).create(order);
 	}
@@ -36,7 +38,9 @@ public class OrderServicesTest {
 
 	@Test
 	public void orderServicesUpdate() {
-		Order order = new Order(1L, 1L, BigDecimal.valueOf(7.99));
+		ArrayList<Long> items = new ArrayList<>();
+		ArrayList<Integer> qty = new ArrayList<>();
+		Order order = new Order(items, qty, 1L, 1L);
 		orderServices.update(order);
 		Mockito.verify(orderDao, Mockito.times(1)).update(order);
 	}
