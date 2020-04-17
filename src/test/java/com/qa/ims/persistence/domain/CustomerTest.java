@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class CustomerTest {
@@ -140,10 +139,9 @@ public class CustomerTest {
 		assertEquals(customer.hashCode(), other.hashCode());
 	}
 
-	@Ignore
 	@Test
 	public void toStringTest() {
-		String toString = "id: 1 \tfirst name: Chris\tsurname: Perrins";
+		String toString = "Customer id: 1 |\tFirst name: Chris |\tSurname: Perrins";
 		assertEquals(toString, customer.toString());
 	}
 }

@@ -3,6 +3,7 @@ package com.qa.ims.persistence.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,10 +42,11 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 	}
 
 	Item itemFromResultSet(ResultSet resultSet) throws SQLException {
-		Long id = resultSet.getLong("id");
+		Long itemId = resultSet.getLong("item_id");
 		String itemName = resultSet.getString("item_name");
 		BigDecimal price = resultSet.getBigDecimal("price");
-		return new Item(id, itemName, price);
+		Integer stock = resultSet.getInt("stock");
+		return new Item(itemId, itemName, price, stock);
 	}
 
 	@Override
@@ -64,22 +66,91 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 		return new ArrayList<>();
 	}
 
+	public Item readLatest() {
+		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
+				Statement stmt = conn.createStatement();
+				ResultSet resultSet = stmt.executeQuery("SELECT * FROM items ORDER BY item_id DESC LIMIT 1");) {
+			resultSet.next();
+			return itemFromResultSet(resultSet);
+		} catch (Exception e) {
+			LOGGER.debug(e.getStackTrace());
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+
+	/*
+	 * Attempting to use a prepared statment for creating an item in the database
+	 */
 	@Override
-	public Item create(Item t) {
-		// TODO Auto-generated method stub
+	public Item create(Item item) {
+		String query = "INSERT INTO items(item_name, price, stock) values(?, ?, ?)";
+		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
+				PreparedStatement pstmt = conn.prepareStatement(query);) {
+			pstmt.setString(1, item.getItemName());
+			pstmt.setString(2, "" + item.getPrice());
+			pstmt.setString(3, "" + item.getStock());
+			pstmt.executeUpdate();
+			return readLatest();
+		} catch (Exception e) {
+			LOGGER.debug(e.getStackTrace());
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+
+	// This read method is not part of the interface
+	// TODO add overloaded readItem method for item name
+	public Item readItem(Long id) {
+
+		String query = "SELECT * FROM items WHERE item_id = ?";
+		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
+				PreparedStatement pstmt = connection.prepareStatement(query);) {
+			pstmt.setString(1, "" + id);
+			try (ResultSet resultSet = pstmt.executeQuery();) {
+				resultSet.next();
+				return itemFromResultSet(resultSet);
+			} catch (SQLException sqle) {
+				LOGGER.info("An SQL Exception was thrown in the readItem method!");
+				LOGGER.debug(sqle.getStackTrace());
+				LOGGER.error(sqle.getMessage());
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e.getStackTrace());
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
 	@Override
-	public Item update(Item t) {
-		// TODO Auto-generated method stub
+	public Item update(Item item) {
+		String query = "UPDATE items SET item_name = ?, price = ?, stock = ? WHERE item_id = ?";
+		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
+				PreparedStatement pstmt = connection.prepareStatement(query);) {
+			pstmt.setString(1, item.getItemName());
+			pstmt.setString(2, "" + item.getPrice());
+			pstmt.setString(3, "" + item.getStock());
+			pstmt.setString(4, "" + item.getId());
+			pstmt.executeUpdate();
+			return readItem(item.getId());
+		} catch (Exception e) {
+			LOGGER.debug(e.getStackTrace());
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
 	@Override
 	public void delete(long id) {
-		// TODO Auto-generated method stub
-
+		String query = "DELETE FROM items WHERE item_id = ?";
+		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
+				PreparedStatement pstmt = connection.prepareStatement(query);) {
+			pstmt.setString(1, "" + id);
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			LOGGER.debug(e.getStackTrace());
+			LOGGER.error(e.getMessage());
+		}
 	}
 
 }

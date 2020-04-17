@@ -4,27 +4,30 @@ import java.math.BigDecimal;
 
 public class Item {
 
-	private Long id;
+	private Long itemId;
 	private String itemName;
 	private BigDecimal price;
+	private Integer stock;
 
-	public Item(String itemName, BigDecimal price) {
+	public Item(String itemName, BigDecimal price, Integer stock) {
 		this.itemName = itemName;
 		this.price = price;
+		this.stock = stock;
 	}
 
-	public Item(Long id, String itemName, BigDecimal price) {
-		this.id = id;
+	public Item(Long id, String itemName, BigDecimal price, Integer stock) {
+		this.itemId = id;
 		this.itemName = itemName;
 		this.price = price;
+		this.stock = stock;
 	}
 
 	public Long getId() {
-		return id;
+		return itemId;
 	}
 
 	public void setId(Long id) {
-		this.id = id;
+		this.itemId = id;
 	}
 
 	public String getItemName() {
@@ -43,18 +46,27 @@ public class Item {
 		this.price = price;
 	}
 
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
 	@Override
 	public String toString() {
-		return "Item id: " + id + "\tName: " + itemName + "\nPrice: " + price;
+		return "Item id: " + itemId + " |\tName: " + itemName + " |\tPrice: " + price + " |\tStock: " + stock;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
 		result = prime * result + ((itemName == null) ? 0 : itemName.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result + ((stock == null) ? 0 : stock.hashCode());
 		return result;
 	}
 
@@ -67,10 +79,10 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (itemId == null) {
+			if (other.itemId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!itemId.equals(other.itemId))
 			return false;
 		if (itemName == null) {
 			if (other.itemName != null)
@@ -81,6 +93,11 @@ public class Item {
 			if (other.price != null)
 				return false;
 		} else if (!price.equals(other.price))
+			return false;
+		if (stock == null) {
+			if (other.stock != null)
+				return false;
+		} else if (!stock.equals(other.stock))
 			return false;
 		return true;
 	}

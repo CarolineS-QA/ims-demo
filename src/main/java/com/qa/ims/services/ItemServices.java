@@ -9,31 +9,28 @@ public class ItemServices implements CrudableServices<Item> {
 
 	private CrudableDao<Item> itemDao;
 
-	public ItemServices() {
-		// TODO Auto-generated constructor stub
+	public ItemServices(CrudableDao<Item> itemDao) {
+		this.itemDao = itemDao;
 	}
 
 	@Override
 	public List<Item> readAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return itemDao.readAll();
 	}
 
 	@Override
-	public Item create(Item t) {
-		// TODO Auto-generated method stub
-		return null;
+	public Item create(Item item) {
+		return itemDao.create(item);
 	}
 
 	@Override
-	public Item update(Item t) {
-		// TODO Auto-generated method stub
-		return null;
+	public Item update(Item item) {
+		return itemDao.update(item);
 	}
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
+		itemDao.delete(id);
 
 	}
 

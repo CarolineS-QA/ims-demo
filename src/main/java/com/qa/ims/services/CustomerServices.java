@@ -6,13 +6,12 @@ import com.qa.ims.persistence.dao.CrudableDao;
 import com.qa.ims.persistence.domain.Customer;
 
 public class CustomerServices implements CrudableServices<Customer> {
-
 	private CrudableDao<Customer> customerDao;
-	
+
 	public CustomerServices(CrudableDao<Customer> customerDao) {
 		this.customerDao = customerDao;
 	}
-	
+
 	public List<Customer> readAll() {
 		return customerDao.readAll();
 	}

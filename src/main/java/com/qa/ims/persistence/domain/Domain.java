@@ -6,8 +6,8 @@ import com.qa.ims.utils.Utils;
 
 public enum Domain {
 
-	CUSTOMER("Information about customers"), ITEM("Individual Items"), ITEM_ORDERS("Items in an order"),
-	ORDERS("Purchases of items"), STOP("To close the application");
+	CUSTOMERS("Information about customers"), ITEMS("Information about items"), ORDERS("Purchases of items"),
+	STOP("To close the application");
 
 	public static final Logger LOGGER = Logger.getLogger(Domain.class);
 
@@ -34,7 +34,7 @@ public enum Domain {
 				domain = Domain.valueOf(Utils.getInput().toUpperCase());
 				break;
 			} catch (IllegalArgumentException e) {
-				LOGGER.error("Invalid selection please try again");
+				LOGGER.error("Invalid selection please try again.");
 			}
 		}
 		return domain;
