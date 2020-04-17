@@ -21,6 +21,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	private String jdbcConnectionUrl;
 	private String username;
 	private String password;
+	private String orderIdFromTable = "order.order_id";
 
 	public OrderDaoMysql(String username, String password, String ip) {
 		this.jdbcConnectionUrl = "jdbc:mysql://" + ip + "/ims";
@@ -68,7 +69,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 				ResultSet rs = stmt.executeQuery("SELECT * FROM orders");) {
 			ArrayList<Order> orders = new ArrayList<>();
 			while (rs.next()) {
-				orders.add(orderFromResultSet(rs, rs.getLong("orders.order_id")));
+				orders.add(orderFromResultSet(rs, rs.getLong(orderIdFromTable)));
 			}
 			return orders;
 		} catch (SQLException sqle) {
@@ -84,7 +85,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 				ResultSet rs = stmt.executeQuery(
 						"SELECT orders.order_id, orders.customer_id, orders.total, item_orders.item_id, item_orders.qty FROM orders LEFT JOIN item_orders ON orders.order_id=item_orders.order_id ORDER BY order_id DESC LIMIT 1");) {
 			rs.next();
-			return orderFromResultSet(rs, rs.getLong("orders.order_id"));
+			return orderFromResultSet(rs, rs.getLong(orderIdFromTable));
 		} catch (Exception e) {
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());
@@ -147,7 +148,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			pstmt.setString(1, "" + id);
 			try (ResultSet rs = pstmt.executeQuery();) {
 				rs.next();
-				return orderFromResultSet(rs, rs.getLong("orders.order_id"));
+				return orderFromResultSet(rs, rs.getLong(orderIdFromTable));
 			}
 		} catch (Exception e) {
 			LOGGER.info("There was a problem trying to read your order.");
