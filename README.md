@@ -1,54 +1,60 @@
 
 # Inventory Management System (IMS)
 
-My first Individual Project! It involves Java source code, JDBC and a SQL database hosted on Google Cloud Platform.
+My first Individual Project! It involves Java source code, JDBC and a SQL database hosted on Google Cloud Platform. To manage the project I have used Git source control, Maven to build and run JUnit/Mockito tests and Jenkins as part of my CI Pipeline to send to an artifact repository (Nexus).
 
 MVP: A built application runnable via the command line interface.
 
-Trello board for project: [My initial Trello Board](https://trello.com/b/OemgxWxd/qa-project-ims-kanban)
 
-Presentation about the project: [Here on google slides.](https://docs.google.com/presentation/d/1YDEU1-LP33aZws2V7fW8h5KjA1Orr4djnfgzTaIa310/edit?usp=sharing)
+Trello board for project: [initial Board](https://trello.com/b/OemgxWxd/qa-project-ims-kanban)
 
-#### Test Coverage
-for src/main/java: 38.9%
-overall: 59.1%
+Presentation about the project: [on google slides.](https://docs.google.com/presentation/d/1YDEU1-LP33aZws2V7fW8h5KjA1Orr4djnfgzTaIa310/edit?usp=sharing)
+
+**Test Coverage**
+For src/main/java: 38.9%	Overall: 59.1%
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-* Clone the repo to your machine.
-* Open the cmd line / git bash inside the repo file directory
-* Run the following commands:
-
-``` mvn clean package ```
-
-Note: if the build fails here the program is not runnable!
-
-``` java -jar target/CarolineStrasenburgh-SoftwareMarch16-0.0.1-SNAPSHOT-jar-with-dependencies.jar ```
-
-You can double check the file name (you want the jar-with-dependencies) with ``` ls target/ ```
+1. Clone the repo to your machine (fork it first if you want to make changes for yourself).
+2. Open git bash (git should already be initalised if you clone it).
+3. It's recommended that you start making changes on a new branch ``` git checkout -b _NAME-OF-YOUR-BRANCH_ ```
+4. Open project as a maven project in an IDE of your choice
+5. You can start developing!
+6. To run tests you can 'Run as... JUnit tests' or 'Coverage as... JUnit tests'
+7. Or go into the src/test/java via your IDE, pick a test file and run JUnit tests per file
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+What things you need to install the software and how to install them.
+
+<details>
+<summary>**Links!**</summary>
+Java latest version [here](https://www.oracle.com/java/technologies/javase-downloads.html#JDK14)
+Maven [here](https://maven.apache.org/)
+Git & Git Bash [here](https://git-scm.com/downloads)
+mySQL [here](https://dev.mysql.com/downloads/installer/)
+Eclipse [here](https://www.eclipse.org/downloads/)
+Jenkins [here](https://jenkins.io/download/)
+</details>
+
 **To run**
 
 ```
-Java SE 8 (or later) to run the jar file. Latest version [here](https://www.oracle.com/java/technologies/javase-downloads.html#JDK14)
-
-Maven to create the jar-file. Found [here](https://maven.apache.org/)
-
-You can use the command line to run the program but git & git bash are nice to have: Link [here](https://git-scm.com/downloads)
+Java SE 8 (or later) to run the jar file.
+Maven to create the jar-file. 
+One of the following: mySQL on your local machine, the IP and login details for my (or your own) GCP instance.
+You can use the command line to run the program but git & git bash are nice to have.
 ```
 **To develop** (not required)
 ```
-The IDE that I used for this project was Eclipse which you can find [here](https://www.eclipse.org/downloads/)
-
-As part of the CI pipeline for this project I used Jenkins which you can find [here](https://jenkins.io/download/)
+The IDE that I used for this project was Eclipse.
+As part of the CI pipeline for this project I used Jenkins.
 ```
+
 <details>
-<summary>### Installing Demo</summary>
+<summary>**Installing Demo**</summary>
 
 A step by step series of examples that tell you how to get a development env running
 
@@ -68,40 +74,49 @@ End with an example of getting some data out of the system or using it for a lit
 </details>
 
 <details>
-<summary>## Running the tests</summary>
+<summary>Running the tests</summary>
 
 Explain how to run the automated tests for this system. Break down into which tests and what they do
 
 ### Unit Tests 
-JUnit
-Explain what these tests test, why and how to run them
+JUnit is used for unit tests. A unit test will test individual methods within a class for functionality.
 
 ```
-Give an example
+Give an example of why and how to run them
 ```
 
 ### Integration Tests 
-Mockito
-Explain what these tests test, why and how to run them
+Mockito is used for intergration testing. It tests how different classes interact with each other. By 'mocking' the functions that a method/class relies on we can see how the code we are testing works by assuming the parts it relies on work too.
 
 ```
-Give an example
+Give an example of why and how to run them
 ```
 
 ### And coding style tests
-Sonarqube
-Explain what these tests test and why
+Sonarqube is static analysis. I used it to see how well my code conformed to an industry standard, the amount of coverage for my tests, and also highlighting bugs and security warnings.
 
 ```
-Give an example
+Give an example of why and how to run them
 ```
 </details>
 
-<details>
-<summary>## Deployment</summary>
 
-Add additional notes about how to deploy this on a live system.
-</details>
+## Deployment
+
+* Clone the repo to your machine.
+* Open the cmd line / git bash inside the repo file directory
+* Run the following commands:
+
+``` mvn clean package ```
+
+Note: if the build fails here the program is not runnable!
+
+``` java -jar target/CarolineStrasenburgh-SoftwareMarch16-0.0.1-SNAPSHOT-jar-with-dependencies.jar ```
+
+You can double check the file name (you want the jar-with-dependencies) with ``` ls target/ ```
+
+You will need a GCP instance or mySQL on your machine set up to connect to.
+
 
 ## Built With
 
@@ -125,10 +140,10 @@ This project is licensed under the MIT license - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Jordan Harrison [JHarry444] (https://github.com/JHarry444/MarchJDBC)
-For initial into Java wizardry and JDBC.
+for initial intro in Java wizardry and JDBC.
 
 * Chris Perrins [christophperrins] (https://github.com/christophperrins/ims-demo)
-For providing initial code base structure to work from.
+for providing initial code base and structure to work from.
 
 * Nick Johnson [nickrstewarttds] (https://github.com/nickrstewarttds)
-For knowledge on the Java/Project fundementals.
+for his knowledge on the Project/Java fundementals.
