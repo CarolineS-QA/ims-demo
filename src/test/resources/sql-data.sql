@@ -9,5 +9,5 @@ insert into ims.items(item_name, price, stock) values('Never Gonna: Rick Rolled'
 insert into ims.orders(customer_id, total) values(1, 14.97);
 insert into ims.orders(customer_id, total) values(2, 7.99);
 insert into ims.item_orders(order_id, item_id, qty) values(1, 4, 2);
-insert into ims.item_orders(order_id, item_id, qty) values(1, 1);
+insert into ims.item_orders(order_id, item_id, qty) values(1, 1, 2);
 insert into ims.item_orders(order_id, item_id, qty) values(2, 2, 1);
