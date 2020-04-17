@@ -3,7 +3,7 @@
 
 My first Individual Project!
 
-It involves Java source code, JDBC and a SQL database hosted on Google Cloud Platform. To manage the project I have used Git source control, Maven to build and run JUnit/Mockito tests and Jenkins as part of my CI Pipeline to send to an artifact repository (Nexus).
+It involves Java source code, JDBC and a SQL database hosted on Google Cloud Platform. To manage the project I have used Git source control, Maven to build, Eclipse as my IDE to run JUnit/Mockito tests and Jenkins as part of my CI Pipeline to send to Sonarqube (hosted on a Google Cloud VM) and to an artifact repository (Nexus).
 
 MVP: A built application runnable via the command line interface.
 
@@ -21,7 +21,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Clone the repo to your machine (fork it first if you want to make changes for yourself).
 2. Open git bash (git should already be initalised if you clone it).
-3. It's recommended that you start making changes on a new branch ``` git checkout -b _NAME-OF-YOUR-BRANCH_ ```
+3. It's recommended that you start making changes on a new branch ``` git checkout -b NAME-OF-YOUR-BRANCH ```
 4. Open project as a maven project in an IDE of your choice
 5. You can start developing!
 6. To run tests you can 'Run as... JUnit tests' or 'Coverage as... JUnit tests'
@@ -32,16 +32,12 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them.
 
 **Links for Prerequisites**
-Java latest version [here](https://www.oracle.com/java/technologies/javase-downloads.html#JDK14)
 
-Maven [here](https://maven.apache.org/)
-
-Git & Git Bash [here](https://git-scm.com/downloads)
-
-mySQL [here](https://dev.mysql.com/downloads/installer/)
-
-Eclipse [here](https://www.eclipse.org/downloads/)
-
+Java latest version [here](https://www.oracle.com/java/technologies/javase-downloads.html#JDK14),
+Maven [here](https://maven.apache.org/),
+Git & Git Bash [here](https://git-scm.com/downloads),
+mySQL [here](https://dev.mysql.com/downloads/installer/),
+Eclipse [here](https://www.eclipse.org/downloads/),
 Jenkins [here](https://jenkins.io/download/)
 
 **To run**
@@ -112,13 +108,11 @@ Give an example of why and how to run them
 
 ``` mvn clean package ```
 
-Note: if the build fails here the program is not runnable!
-
 ``` java -jar target/CarolineStrasenburgh-SoftwareMarch16-0.0.1-SNAPSHOT-jar-with-dependencies.jar ```
 
 You can double check the file name (you want the jar-with-dependencies) with ``` ls target/ ```
 
-You will need a GCP instance or mySQL on your machine set up to connect to.
+Note: You will need a GCP instance or mySQL on your machine set up to connect to. When you execute the jar the program will run and a scanner will take in your input, then follow the instructions to use the app.
 
 
 ## Built With
