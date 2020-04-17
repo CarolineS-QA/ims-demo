@@ -3,7 +3,7 @@
 
 My first Individual Project!
 
-It involves Java source code, JDBC and a SQL database hosted on Google Cloud Platform. To manage the project I have used Git source control, Maven to build, Eclipse as my IDE to run JUnit/Mockito tests and Jenkins as part of my CI Pipeline to send to Sonarqube (hosted on a Google Cloud VM) and to an artifact repository (Nexus).
+It involves Java source code, JDBC and a SQL database hosted on Google Cloud Platform. To manage the project I have used Git source control, Eclipse as my IDE to run JUnit/Mockito tests, Maven to build and Jenkins as part of my CI Pipeline to send to Sonarqube (hosted on a Google Cloud VM) and to an artifact repository (Nexus).
 
 MVP: A built application runnable via the command line interface.
 
@@ -35,8 +35,8 @@ What things you need to install the software and how to install them.
 
 Java latest version [here](https://www.oracle.com/java/technologies/javase-downloads.html#JDK14),
 Maven [here](https://maven.apache.org/),
-Git & Git Bash [here](https://git-scm.com/downloads),
 mySQL [here](https://dev.mysql.com/downloads/installer/),
+Git & Git Bash [here](https://git-scm.com/downloads),
 Eclipse [here](https://www.eclipse.org/downloads/),
 Jenkins [here](https://jenkins.io/download/)
 
@@ -45,7 +45,7 @@ Jenkins [here](https://jenkins.io/download/)
 ```
 Java SE 8 (or later) to run the jar file.
 Maven to create the jar-file. 
-One of the following: mySQL on your local machine, the IP and login details for my (or your own) GCP instance.
+One of the following: mySQL on your local machine, the IP and login details for my GCP instance or your own GCP instance.
 You can use the command line to run the program but git & git bash are nice to have.
 ```
 **To develop**
