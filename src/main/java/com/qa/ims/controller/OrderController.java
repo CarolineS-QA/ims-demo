@@ -78,7 +78,7 @@ public class OrderController implements CrudableController<Order> {
 			moreItems = getInput();
 		}
 		Order order = orderService.update(new Order(items, qty, customerId, orderId));
-		LOGGER.info("Order updated!");
+		LOGGER.info("Order updated! - A new order id has been assigned.");
 		return order;
 	}
 

@@ -131,6 +131,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			rs.next();
 			return orderFromResultSet(rs);
 		} catch (Exception e) {
+			LOGGER.info("There was a problem trying to read your order.");
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());
 		}
@@ -139,29 +140,9 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 
 	@Override
 	public Order update(Order order) {
-		String query = "UPDATE orders SET customer_id = ?, total = ? WHERE order_id = ?";
-		String qtyQuery = "UPDATE item_orders SET qty = ? WHERE item_id = ? AND order_id = ?";
-		try (Connection conn = DriverManager.getConnection(jdbcConnectionUrl, username, password);
-				PreparedStatement pstmt = conn.prepareStatement(query);
-				PreparedStatement pstmtItemOrders = conn.prepareStatement(qtyQuery);) {
-			pstmt.setString(1, "" + order.getCustomerId());
-			pstmt.setString(2, "" + calcTotalPrice(order.getItems()));
-			pstmt.setString(3, "" + order.getOrderId());
-			pstmt.executeUpdate();
-			ArrayList<Long> itemIds = order.getItems();
-			ArrayList<Integer> qty = order.getQty();
-			for (Long id : itemIds) {
-				pstmtItemOrders.setString(1, "" + qty.get(id.intValue()));
-				pstmtItemOrders.setString(2, "" + id);
-				pstmtItemOrders.setString(3, "" + order.getOrderId());
-				pstmtItemOrders.executeUpdate();
-			}
-			return readOrder(order.getOrderId());
-		} catch (Exception e) {
-			LOGGER.debug(e.getStackTrace());
-			LOGGER.error(e.getMessage());
-		}
-		return null;
+		delete(order.getOrderId());
+		create(order);
+		return readOrder(order.getOrderId());
 	}
 
 	@Override
@@ -176,6 +157,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 			ordersPstmt.setString(1, "" + id);
 			ordersPstmt.executeUpdate();
 		} catch (Exception e) {
+			LOGGER.info("There was a problem deleting your order.");
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());
 		}
