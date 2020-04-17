@@ -102,13 +102,19 @@ public class ItemDaoMysql implements CrudableDao<Item> {
 	// This read method is not part of the interface
 	// TODO add overloaded readItem method for item name
 	public Item readItem(Long id) {
+
 		String query = "SELECT * FROM items WHERE item_id = ?";
 		try (Connection connection = DriverManager.getConnection(jdbcConnectionUrl, username, password);
 				PreparedStatement pstmt = connection.prepareStatement(query);) {
 			pstmt.setString(1, "" + id);
-			ResultSet resultSet = pstmt.executeQuery();
-			resultSet.next();
-			return itemFromResultSet(resultSet);
+			try (ResultSet resultSet = pstmt.executeQuery();) {
+				resultSet.next();
+				return itemFromResultSet(resultSet);
+			} catch (SQLException sqle) {
+				LOGGER.info("An SQL Exception was thrown in the readItem method!");
+				LOGGER.debug(sqle.getStackTrace());
+				LOGGER.error(sqle.getMessage());
+			}
 		} catch (Exception e) {
 			LOGGER.debug(e.getStackTrace());
 			LOGGER.error(e.getMessage());
