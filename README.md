@@ -1,7 +1,9 @@
 
 # Inventory Management System (IMS)
 
-My first Individual Project! It involves Java source code, JDBC and a SQL database hosted on Google Cloud Platform. To manage the project I have used Git source control, Maven to build and run JUnit/Mockito tests and Jenkins as part of my CI Pipeline to send to an artifact repository (Nexus).
+My first Individual Project!
+
+It involves Java source code, JDBC and a SQL database hosted on Google Cloud Platform. To manage the project I have used Git source control, Maven to build and run JUnit/Mockito tests and Jenkins as part of my CI Pipeline to send to an artifact repository (Nexus).
 
 MVP: A built application runnable via the command line interface.
 
@@ -29,15 +31,18 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them.
 
-<details>
-<summary>**Links!**</summary>
+**Links for Prerequisites**
 Java latest version [here](https://www.oracle.com/java/technologies/javase-downloads.html#JDK14)
+
 Maven [here](https://maven.apache.org/)
+
 Git & Git Bash [here](https://git-scm.com/downloads)
+
 mySQL [here](https://dev.mysql.com/downloads/installer/)
+
 Eclipse [here](https://www.eclipse.org/downloads/)
+
 Jenkins [here](https://jenkins.io/download/)
-</details>
 
 **To run**
 
@@ -47,14 +52,14 @@ Maven to create the jar-file.
 One of the following: mySQL on your local machine, the IP and login details for my (or your own) GCP instance.
 You can use the command line to run the program but git & git bash are nice to have.
 ```
-**To develop** (not required)
+**To develop**
 ```
 The IDE that I used for this project was Eclipse.
 As part of the CI pipeline for this project I used Jenkins.
 ```
 
 <details>
-<summary>**Installing Demo**</summary>
+<summary>Installing Demo</summary>
 
 A step by step series of examples that tell you how to get a development env running
 
@@ -76,8 +81,6 @@ End with an example of getting some data out of the system or using it for a lit
 <details>
 <summary>Running the tests</summary>
 
-Explain how to run the automated tests for this system. Break down into which tests and what they do
-
 ### Unit Tests 
 JUnit is used for unit tests. A unit test will test individual methods within a class for functionality.
 
@@ -92,8 +95,8 @@ Mockito is used for intergration testing. It tests how different classes interac
 Give an example of why and how to run them
 ```
 
-### And coding style tests
-Sonarqube is static analysis. I used it to see how well my code conformed to an industry standard, the amount of coverage for my tests, and also highlighting bugs and security warnings.
+### Coding style tests (static analysis)
+Sonarqube is used for static analysis. I used it to see how well my code conformed to an industry standard, the amount of coverage for my tests, and also highlighting bugs and security warnings.
 
 ```
 Give an example of why and how to run them
@@ -120,7 +123,7 @@ You will need a GCP instance or mySQL on your machine set up to connect to.
 
 ## Built With
 
-* [Maven](https://maven.apache.org/) - Dependency Management
+[Maven](https://maven.apache.org/) - Dependency Management
 
 ## Versioning
 
