@@ -5,7 +5,7 @@ My first Individual Project involving Java source code and an SQL database hoste
 
 MVP: A built application runnable via the command line interface.
 
-Test Coverage: 0%
+Test Coverage for src/main/java: 37.1%
 
 Trello board for project: https://trello.com/b/OemgxWxd/qa-project-ims-kanban
 
@@ -94,5 +94,13 @@ This project is licensed under the MIT license - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Jordan Harrison [JHarry444] (https://github.com/JHarry444/MarchJDBC)
+
+For initial into Java wizardry and JDBC.
+
 * Chris Perrins [christophperrins] (https://github.com/christophperrins/ims-demo)
-* 
+
+For providing initial code base structure to work from.
+
+* Nick Johnson [nickrstewarttds]
+
+For knowledge on the Java/Project fundementals.
