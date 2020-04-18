@@ -15,12 +15,14 @@ Presentation about the project: [on google slides.](https://docs.google.com/pres
 **Test Coverage**
 For src/main/java: 38.9%	Overall: 59.1%
 
+For test reports please switch to the ``` project_docs ``` branch, and in the project_docs folder you will find  ```surefure-reports/ ``` alongside other assessed documentation.
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 1. Clone the repo to your machine (fork it first if you want to make changes for yourself).
-2. Open git bash (git should already be initalised if you clone it).
+2. Open git bash (git should already be initalised if you clone it otherwise use ```git init```).
 3. It's recommended that you start making changes on a new branch ``` git checkout -b NAME-OF-YOUR-BRANCH ```
 4. Open project as a maven project in an IDE of your choice
 5. You can start developing!
@@ -45,7 +47,11 @@ Jenkins [here](https://jenkins.io/download/)
 ```
 Java SE 8 (or later) to run the jar file.
 Maven to create the jar-file. 
-One of the following: mySQL on your local machine, the IP and login details for my GCP instance or your own GCP instance.
+One of the following:
+1. mySQL on your local machine,
+2. the IP and login details for my GCP instance,
+3. or your own GCP instance with SQL set up.
+
 You can use the command line to run the program but git & git bash are nice to have.
 ```
 **To develop**
@@ -108,7 +114,7 @@ Give an example of why and how to run them
 
 ``` mvn clean package ```
 
-``` java -jar target/CarolineStrasenburgh-SoftwareMarch16-0.0.1-SNAPSHOT-jar-with-dependencies.jar ```
+``` java -jar target/CarolineStrasenburgh-SoftwareMarch16-0.1.0-SNAPSHOT-jar-with-dependencies.jar ```
 
 You can double check the file name (you want the jar-with-dependencies) with ``` ls target/ ```
 
