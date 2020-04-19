@@ -12,8 +12,8 @@ Trello board for project: [initial Board](https://trello.com/b/OemgxWxd/qa-proje
 
 Presentation about the project: [on google slides.](https://docs.google.com/presentation/d/1YDEU1-LP33aZws2V7fW8h5KjA1Orr4djnfgzTaIa310/edit?usp=sharing)
 
-**Test Coverage**
-For src/main/java: 38.9%	Overall: 59.1%
+**Test Coverage:**
+For src/main/java: 38.9%	//Overall: 59.1%		//Sonarqube: 45%
 
 For test reports please switch to the ``` project_docs ``` branch, and in the project_docs folder you will find  ```surefure-reports/ ``` alongside other assessed documentation.
 
@@ -142,11 +142,14 @@ This project is licensed under the MIT license - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Jordan Harrison [JHarry444] (https://github.com/JHarry444/MarchJDBC)
+* Jordan Harrison [JHarry444](https://github.com/JHarry444/MarchJDBC)
 for initial intro in Java wizardry and JDBC.
 
-* Chris Perrins [christophperrins] (https://github.com/christophperrins/ims-demo)
+* Chris Perrins [christophperrins](https://github.com/christophperrins/ims-demo)
 for providing initial code base and structure to work from.
 
-* Nick Johnson [nickrstewarttds] (https://github.com/nickrstewarttds)
+* Nick Johnson [nickrstewarttds](https://github.com/nickrstewarttds)
 for his knowledge on the Project/Java fundementals.
+
+* Korbin [KMRRingQA](https://github.com/KMRRingQA)
+for going along with my sneaky data input into his database.
