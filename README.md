@@ -15,9 +15,7 @@ Presentation about the project: [on google slides.](https://docs.google.com/pres
 **Test Coverage:**
 For src/main/java: 38.9%	// Overall: 59.1%		// Sonarqube: 45%
 
-For test reports please switch to the ``` project_docs ``` branch, and in the project_docs folder you will find  ```surefure-reports/ ``` alongside other assessed documentation.
-
-For test reports please switch to the ``` project_docs ``` branch, and in the project_docs folder you will find  ```surefure-reports/ ``` alongside other assessed documentation.
+For test reports and other documentation please see the ``` project_docs ``` folder.
 
 ## Getting Started
 
