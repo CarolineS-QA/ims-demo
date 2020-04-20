@@ -23,7 +23,7 @@ public class OrderDaoMysql implements CrudableDao<Order> {
 	private String password;
 	@SuppressWarnings("unused")
 	private String ip; // needed to differenticate constructors. As can't have two Stringx3 args.
-	private String orderIdFromTable = "order.order_id";
+	private String orderIdFromTable = "orders.order_id"; // hotfix
 
 	public OrderDaoMysql(String username, String password, String ip) {
 		this.jdbcConnectionUrl = "jdbc:mysql://" + ip + "/ims";
