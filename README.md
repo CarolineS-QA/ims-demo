@@ -17,6 +17,8 @@ For src/main/java: 38.9%	// Overall: 59.1%		// Sonarqube: 45%
 
 For test reports please switch to the ``` project_docs ``` branch, and in the project_docs folder you will find  ```surefure-reports/ ``` alongside other assessed documentation.
 
+For test reports please switch to the ``` project_docs ``` branch, and in the project_docs folder you will find  ```surefure-reports/ ``` alongside other assessed documentation.
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
